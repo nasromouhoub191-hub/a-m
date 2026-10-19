@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A@M Game - صالة ألعاب القل</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Cairo -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            blue: '#00f0ff',
+                            orange: '#ff6600',
+                            dark: '#0a0d14',
+                            card: '#121824'
+                        }
+                    },
+                    fontFamily: {
+                        cairo: ['Cairo', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: #0a0d14;
+            color: #ffffff;
+        }
+        .neon-border-blue {
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.3);
+            border: 1px solid rgba(0, 240, 255, 0.5);
+        }
+        .neon-border-orange {
+            box-shadow: 0 0 15px rgba(255, 102, 0, 0.3);
+            border: 1px solid rgba(255, 102, 0, 0.5);
+        }
+        .neon-text-blue {
+            text-shadow: 0 0 10px rgba(0, 240, 255, 0.7);
+        }
+        .neon-text-orange {
+            text-shadow: 0 0 10px rgba(255, 102, 0, 0.7);
+        }
+        .seat-btn.selected {
+            background-color: #00f0ff !important;
+            color: #000 !important;
+            font-weight: bold;
+            box-shadow: 0 0 15px #00f0ff;
+        }
+        input[type=range] {
+            accent-color: #00f0ff;
+        }
+    </style>
+</head>
+<body class="bg-brand-dark text-gray-100 min-h-screen flex flex-col justify-between">
+
+    <!-- Welcome Modal / Splash Screen -->
+    <div id="welcomeModal" class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/85 backdrop-blur-md transition-opacity duration-300">
+        <div class="bg-brand-card max-w-lg w-full rounded-3xl p-6 md:p-8 border border-brand-blue/50 text-center shadow-[0_0_50px_rgba(0,240,255,0.2)] relative overflow-hidden">
+            <div class="w-20 h-20 bg-gradient-to-tr from-brand-orange to-brand-blue rounded-2xl mx-auto flex items-center justify-center text-black font-black text-3xl mb-4 shadow-lg">
+                A@M
+            </div>
+            <h2 class="text-3xl font-black mb-2"><span class="text-brand-blue neon-text-blue">A@M GAME</span> <span class="text-brand-orange">القل</span></h2>
+            <p class="text-gray-300 text-sm mb-6">مرحباً بكم في الصالة الأولى للألعاب الإلكترونية وتحديات الشبكة والـ PS4 في مدينة القل!</p>
+            
+            <div class="bg-gray-900/80 p-4 rounded-2xl border border-gray-800 text-right space-y-2 mb-6 text-xs text-gray-300">
+                <div class="flex items-center gap-2"><i class="fa-solid fa-desktop text-brand-blue"></i> CS 1.6 PC: 100 دج / ساعة</div>
+                <div class="flex items-center gap-2"><i class="fa-solid fa-gamepad text-brand-orange"></i> PS4 (1v1 & 2v2): ابتداءً من 50 دج / مباراة</div>
+                <div class="flex items-center gap-2"><i class="fa-solid fa-moon text-purple-400"></i> كراء PS4 ليلة كاملة: 600 دج</div>
+            </div>
+
+            <div class="flex flex-col gap-3">
+                <button onclick="closeWelcomeModal()" class="w-full bg-gradient-to-r from-brand-blue to-blue-600 text-black font-extrabold py-3.5 px-6 rounded-xl hover:opacity-90 transition shadow-lg text-sm">
+                    🚀 دخول واحتجاز جهازك الآن
+                </button>
+                <a href="https://maps.app.goo.gl/4zKgwbyikg3E1dhXA" target="_blank" class="w-full bg-gray-800 hover:bg-gray-700 text-brand-orange font-bold py-2.5 px-4 rounded-xl border border-brand-orange/30 text-xs transition flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-location-dot"></i> فتح موقع الصالة الدقيق على الخريطة (GPS)
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header / Navbar -->
+    <header class="sticky top-0 z-50 bg-brand-dark/95 backdrop-blur border-b border-gray-800 shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+            <div class="flex items-center space-x-3 space-x-reverse">
+                <div class="w-12 h-12 bg-gradient-to-tr from-brand-orange to-brand-blue rounded-xl flex items-center justify-center shadow-lg">
+                    <i class="fa-solid font-bold text-2xl text-black">A@M</i>
+                </div>
+                <div>
+                    <h1 class="text-2xl font-black tracking-wider"><span class="text-brand-blue">A@M</span> <span class="text-brand-orange">GAME</span></h1>
+                    <a href="https://maps.app.goo.gl/4zKgwbyikg3E1dhXA" target="_blank" class="text-xs text-gray-400 hover:text-brand-orange transition flex items-center gap-1">
+                        <i class="fa-solid fa-location-dot text-brand-orange"></i> القل، سكيكدة (موقع GPS الدقيق)
+                    </a>
+                </div>
+            </div>
+
+            <nav class="hidden md:flex space-x-6 space-x-reverse font-bold text-sm">
+                <a href="#games" class="hover:text-brand-blue transition">الألعاب والأسعار</a>
+                <a href="#booking" class="hover:text-brand-orange transition">نظام الحجز</a>
+                <a href="#team" class="hover:text-brand-blue transition">فريق العمل</a>
+            </nav>
+
+            <div class="flex items-center gap-2">
+                <a href="https://maps.app.goo.gl/4zKgwbyikg3E1dhXA" target="_blank" class="hidden sm:flex bg-gray-800 border border-brand-orange/40 hover:bg-gray-700 text-brand-orange font-bold px-3 py-2 rounded-lg transition text-xs items-center gap-1">
+                    <i class="fa-solid fa-map-location-dot"></i> GPS
+                </a>
+                <a href="#booking" class="bg-gradient-to-r from-brand-blue to-blue-600 text-black font-extrabold px-4 py-2 rounded-lg hover:opacity-90 transition shadow-lg text-xs md:text-sm">
+                    <i class="fa-solid fa-gamepad ml-1"></i> احجز جهازك
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="relative py-16 px-4 bg-gradient-to-b from-brand-card to-brand-dark overflow-hidden border-b border-gray-800">
+        <div class="max-w-5xl mx-auto text-center relative z-10">
+            <span class="bg-brand-orange/20 text-brand-orange border border-brand-orange/40 text-xs font-bold px-4 py-1.5 rounded-full uppercase tracking-widest inline-block mb-4">
+                أفضل صالة ألعاب في القل
+            </span>
+            <h2 class="text-4xl md:text-6xl font-black mb-6 leading-tight">
+                عش متعة التنافس في <span class="text-brand-blue neon-text-blue">A@M GAME</span>
+            </h2>
+            <p class="text-gray-300 text-lg md:text-xl max-w-2xl mx-auto mb-8 leading-relaxed">
+                تحديات حماسية في **CS 1.6** بالساعة والدقائق، ومباريات **FC 27** و **PES 2027** بالمباراة، أو كراء **PS4** ليلة كاملة بأفضل الأسعار.
+            </p>
+
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto mt-10">
+                <div class="bg-brand-card p-4 rounded-2xl border border-gray-800 text-center">
+                    <i class="fa-solid fa-desktop text-3xl text-brand-blue mb-2"></i>
+                    <h3 class="font-bold text-sm">CS 1.6 LAN</h3>
+                    <p class="text-brand-orange font-black text-lg mt-1">100 دج / ساعة</p>
+                </div>
+                <div class="bg-brand-card p-4 rounded-2xl border border-gray-800 text-center">
+                    <i class="fa-solid fa-gamepad text-3xl text-brand-orange mb-2"></i>
+                    <h3 class="font-bold text-sm">PS4 - 1v1</h3>
+                    <p class="text-brand-blue font-black text-lg mt-1">50 دج / مباراة</p>
+                </div>
+                <div class="bg-brand-card p-4 rounded-2xl border border-gray-800 text-center">
+                    <i class="fa-solid fa-users text-3xl text-brand-blue mb-2"></i>
+                    <h3 class="font-bold text-sm">PS4 - 2v2 (زوجي)</h3>
+                    <p class="text-brand-orange font-black text-lg mt-1">80 دج / مباراة</p>
+                </div>
+                <div class="bg-brand-card p-4 rounded-2xl border border-gray-800 text-center">
+                    <i class="fa-solid fa-moon text-3xl text-purple-400 mb-2"></i>
+                    <h3 class="font-bold text-sm">كراء PS4 ليلة</h3>
+                    <p class="text-purple-400 font-black text-lg mt-1">600 دج / ليلة</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Booking & Seat Selection -->
+    <section id="booking" class="py-16 px-4 max-w-6xl mx-auto w-full">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl font-black text-brand-blue neon-text-blue mb-2">حجز الأجهزة والمباريات أونلاين</h2>
+            <p class="text-gray-400">اختر نوع الخدمة، وقت الوصول المتوقع، والمقاعد واحجز فوراً عبر واتساب</p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Form Selection -->
+            <div class="lg:col-span-2 bg-brand-card p-6 rounded-2xl border border-gray-800 shadow-xl space-y-6">
+                
+                <!-- Customer Name -->
+                <div>
+                    <label class="block font-bold text-sm mb-2 text-gray-300">1. اسمك الكريِم (أو اسم المحجوز له):</label>
+                    <input type="text" id="customerName" placeholder="مثال: حسام وأصدقاؤه" class="w-full bg-gray-900 border border-gray-700 rounded-xl p-3 text-white font-bold focus:border-brand-blue focus:outline-none">
+                </div>
+
+                <!-- Select Platform -->
+                <div>
+                    <label class="block font-bold text-sm mb-3 text-gray-300">2. اختر نوع الخدمة:</label>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                        <button onclick="setPlatform('pc', 100)" id="btn-pc" class="p-3 rounded-xl border border-gray-700 bg-gray-900 font-bold hover:border-brand-blue transition text-center focus:outline-none">
+                            <i class="fa-solid fa-desktop block text-xl text-brand-blue mb-1"></i>
+                            <span class="text-xs">CS 1.6 (PC)</span>
+                        </button>
+                        <button onclick="setPlatform('ps4-1v1', 50)" id="btn-ps4-1" class="p-3 rounded-xl border border-gray-700 bg-gray-900 font-bold hover:border-brand-orange transition text-center focus:outline-none">
+                            <i class="fa-solid fa-gamepad block text-xl text-brand-orange mb-1"></i>
+                            <span class="text-xs">PS4 (1v1)</span>
+                        </button>
+                        <button onclick="setPlatform('ps4-2v2', 80)" id="btn-ps4-2" class="p-3 rounded-xl border border-gray-700 bg-gray-900 font-bold hover:border-brand-blue transition text-center focus:outline-none">
+                            <i class="fa-solid fa-users block text-xl text-brand-blue mb-1"></i>
+                            <span class="text-xs">PS4 (2v2)</span>
+                        </button>
+                        <button onclick="setPlatform('ps4-night', 600)" id="btn-ps4-night" class="p-3 rounded-xl border border-gray-700 bg-gray-900 font-bold hover:border-purple-500 transition text-center focus:outline-none">
+                            <i class="fa-solid fa-moon block text-xl text-purple-400 mb-1"></i>
+                            <span class="text-xs">كراء ليلة</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Dynamic Quantity Selector -->
+                <div>
+                    <div class="flex justify-between items-center mb-2">
+                        <label id="quantityLabel" class="font-bold text-sm text-gray-300">3. اختر الوقت (بالساعات والدقائق):</label>
+                        <span id="timeDisplayBadge" class="bg-brand-blue/20 text-brand-blue border border-brand-blue/40 px-3 py-1 rounded-lg text-sm font-black">1 ساعة</span>
+                    </div>
+
+                    <!-- Slider for PC (Hours & Minutes) -->
+                    <div id="pcSliderContainer" class="bg-gray-900 p-4 rounded-xl border border-gray-800">
+                        <input type="range" id="timeSlider" min="15" max="300" step="15" value="60" oninput="calculateTotal()" class="w-full h-2 bg-gray-800 rounded-lg appearance-none cursor-pointer">
+                        <div class="flex justify-between text-xs text-gray-400 mt-2 font-bold">
+                            <span>15 دقيقة</span>
+                            <span>1 ساعة</span>
+                            <span>2 ساعتين</span>
+                            <span>3 ساعات</span>
+                            <span>5 ساعات</span>
+                        </div>
+                    </div>
+
+                    <!-- Input Number for PS4 Matches or Nights -->
+                    <div id="numberInputContainer" class="hidden">
+                        <input type="number" id="quantityInput" min="1" max="20" value="1" onchange="calculateTotal()" class="w-full bg-gray-900 border border-gray-700 rounded-xl p-3 text-white font-bold text-center focus:border-brand-blue focus:outline-none">
+                    </div>
+                </div>
+
+                <!-- Arrival Time -->
+                <div>
+                    <label class="block font-bold text-sm mb-2 text-gray-300">4. الوقت المتوقع للحضور إلى الصالة:</label>
+                    <input type="time" id="arrivalTime" value="16:00" onchange="calculateTotal()" class="w-full bg-gray-900 border border-gray-700 rounded-xl p-3 text-white font-bold text-center focus:border-brand-orange focus:outline-none">
+                </div>
+
+                <!-- Seat Grid -->
+                <div>
+                    <label class="block font-bold text-sm mb-2 text-gray-300">5. اختر الأجهزة المحددة بالظبط (Sélection):</label>
+                    <div id="seatsGrid" class="grid grid-cols-5 gap-3 p-4 bg-gray-900 rounded-xl border border-gray-800">
+                        <!-- Dynamic Seats -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Summary & WhatsApp Action -->
+            <div class="bg-brand-card p-6 rounded-2xl border border-gray-800 shadow-xl flex flex-col justify-between">
+                <div>
+                    <h3 class="text-xl font-bold mb-4 text-brand-orange border-b border-gray-800 pb-3">ملخص الحجز</h3>
+                    <div class="space-y-3 text-sm">
+                        <div class="flex justify-between text-gray-400">
+                            <span>الزبون:</span>
+                            <span id="summaryCustomer" class="font-bold text-white">زائر</span>
+                        </div>
+                        <div class="flex justify-between text-gray-400">
+                            <span>الخدمة:</span>
+                            <span id="summaryPlatform" class="font-bold text-white">CS 1.6 (PC)</span>
+                        </div>
+                        <div class="flex justify-between text-gray-400">
+                            <span>الأجهزة المختارة:</span>
+                            <span id="summarySeats" class="font-bold text-brand-blue">لم يتم الاختيار</span>
+                        </div>
+                        <div class="flex justify-between text-gray-400">
+                            <span id="summaryQtyTitle">المدة:</span>
+                            <span id="summaryQty" class="font-bold text-white">1 ساعة</span>
+                        </div>
+                        <div class="flex justify-between text-gray-400">
+                            <span>ساعة الوصول:</span>
+                            <span id="summaryArrival" class="font-bold text-brand-orange">16:00</span>
+                        </div>
+                        <hr class="border-gray-800 my-2">
+                        <div class="flex justify-between text-lg font-black">
+                            <span>المبلغ الإجمالي:</span>
+                            <span id="summaryTotal" class="text-brand-orange">100 دج</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-8 space-y-3">
+                    <label class="block font-bold text-xs text-gray-400">إرسال الحجز التأكيدي عبر الواتساب إلى:</label>
+                    <button onclick="sendWhatsApp('0559935670')" class="w-full bg-green-600 hover:bg-green-500 text-white font-bold py-3 px-4 rounded-xl transition flex items-center justify-center gap-2 shadow-lg">
+                        <i class="fa-brands fa-whatsapp text-xl"></i> إرسال إلى جاليل (0559935670)
+                    </button>
+                    <button onclick="sendWhatsApp('0556751958')" class="w-full bg-gray-800 hover:bg-gray-700 text-white font-bold py-2.5 px-4 rounded-xl transition flex items-center justify-center gap-2 text-xs">
+                        <i class="fa-brands fa-whatsapp"></i> إرسال لمهدي (0556751958)
+                    </button>
+                    <button onclick="sendWhatsApp('0782890923')" class="w-full bg-gray-800 hover:bg-gray-700 text-white font-bold py-2.5 px-4 rounded-xl transition flex items-center justify-center gap-2 text-xs">
+                        <i class="fa-brands fa-whatsapp"></i> إرسال لعلاء (0782890923)
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Team & Direct Call Section -->
+    <section id="team" class="py-16 px-4 max-w-5xl mx-auto w-full">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl font-black text-brand-orange neon-text-orange mb-2">الاتصال المباشر بالفريق</h2>
+            <p class="text-gray-400 mb-4">يمكنك الاتصال الفوري بنقرة واحدة أو التوجه لموقع الصالة مباشرة عبر GPS</p>
+            <a href="https://maps.app.goo.gl/4zKgwbyikg3E1dhXA" target="_blank" class="inline-flex items-center gap-2 bg-brand-orange/20 text-brand-orange border border-brand-orange/40 hover:bg-brand-orange hover:text-black font-bold px-5 py-2.5 rounded-xl transition text-sm">
+                <i class="fa-solid fa-map-location-dot"></i> فتح موقع الصالة الدقيق عبر GPS
+            </a>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- جاليل -->
+            <div class="bg-brand-card p-6 rounded-2xl border border-gray-800 text-center relative overflow-hidden">
+                <div class="w-16 h-16 bg-gradient-to-tr from-brand-orange to-brand-blue rounded-full mx-auto flex items-center justify-center text-black font-black text-2xl mb-4">
+                    J
+                </div>
+                <h3 class="font-bold text-xl mb-1">جاليل</h3>
+                <p class="text-xs text-brand-blue font-bold mb-4">المشرف والقائم على الخدمة</p>
+                <a href="tel:0559935670" class="block bg-gray-900 hover:bg-brand-blue hover:text-black text-brand-blue border border-brand-blue/40 font-bold py-2.5 px-4 rounded-xl transition">
+                    <i class="fa-solid fa-phone ml-2"></i> 0559935670
+                </a>
+            </div>
+
+            <!-- مهدي بورفيس -->
+            <div class="bg-brand-card p-6 rounded-2xl border border-gray-800 text-center relative overflow-hidden">
+                <div class="w-16 h-16 bg-gradient-to-tr from-brand-blue to-purple-600 rounded-full mx-auto flex items-center justify-center text-black font-black text-2xl mb-4">
+                    M
+                </div>
+                <h3 class="font-bold text-xl mb-1">مهدي بورفيس</h3>
+                <p class="text-xs text-brand-orange font-bold mb-4">المالك (Owner)</p>
+                <a href="tel:0556751958" class="block bg-gray-900 hover:bg-brand-orange hover:text-black text-brand-orange border border-brand-orange/40 font-bold py-2.5 px-4 rounded-xl transition">
+                    <i class="fa-solid fa-phone ml-2"></i> 0556751958
+                </a>
+            </div>
+
+            <!-- علاء بولمدن -->
+            <div class="bg-brand-card p-6 rounded-2xl border border-gray-800 text-center relative overflow-hidden">
+                <div class="w-16 h-16 bg-gradient-to-tr from-brand-orange to-red-600 rounded-full mx-auto flex items-center justify-center text-black font-black text-2xl mb-4">
+                    A
+                </div>
+                <h3 class="font-bold text-xl mb-1">علاء بولمدن</h3>
+                <p class="text-xs text-brand-orange font-bold mb-4">المالك (Owner)</p>
+                <a href="tel:0782890923" class="block bg-gray-900 hover:bg-brand-orange hover:text-black text-brand-orange border border-brand-orange/40 font-bold py-2.5 px-4 rounded-xl transition">
+                    <i class="fa-solid fa-phone ml-2"></i> 0782890923
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Admin Section -->
+    <section class="py-10 bg-gray-950 border-t border-gray-900">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            
+            <button id="adminLoginBtn" onclick="unlockAdmin()" class="bg-gray-900 border border-gray-800 hover:border-brand-blue text-gray-400 font-bold py-2.5 px-6 rounded-xl text-xs transition inline-flex items-center gap-2 shadow-lg">
+                <i class="fa-solid fa-user-shield text-brand-orange"></i> دخول العمال والمالكين (لوحة التحكم الإدارية)
+            </button>
+
+            <!-- Admin Panel (Initially Hidden) -->
+            <div id="adminPanel" class="hidden text-right bg-brand-card p-6 rounded-2xl border border-gray-800 shadow-2xl mt-4">
+                
+                <!-- Panel Header -->
+                <div class="flex flex-col md:flex-row justify-between items-center mb-6 border-b border-gray-800 pb-4 gap-4">
+                    <div>
+                        <h3 class="text-2xl font-black text-brand-orange flex items-center gap-2">
+                            <i class="fa-solid fa-sliders"></i> جدول الحجوزات اليومي (A@M Admin)
+                        </h3>
+                        <p class="text-xs text-gray-400 mt-1">متابعة الحجوزات اليومية وإدارة الأجهزة والمداخيل مباشرة</p>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <button onclick="clearAllBookings()" class="bg-red-900/30 hover:bg-red-900/60 text-red-400 border border-red-800 text-xs px-3 py-2 rounded-xl transition font-bold">
+                            <i class="fa-solid fa-trash-can ml-1"></i> تفريغ جميع الحجوزات
+                        </button>
+                        <button onclick="lockAdmin()" class="bg-gray-800 hover:bg-gray-700 text-gray-300 text-xs px-4 py-2 rounded-xl border border-gray-700 font-bold">
+                            قفل اللوحة <i class="fa-solid fa-lock mr-1"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Analytics Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                    <div class="bg-gray-900 p-4 rounded-xl border border-gray-800 flex items-center justify-between">
+                        <div>
+                            <span class="text-xs text-gray-400 block font-bold">إجمالي حجوزات اليوم</span>
+                            <span id="statTotalBookings" class="text-2xl font-black text-white">1</span>
+                        </div>
+                        <i class="fa-solid fa-calendar-check text-3xl text-brand-blue"></i>
+                    </div>
+                    <div class="bg-gray-900 p-4 rounded-xl border border-gray-800 flex items-center justify-between">
+                        <div>
+                            <span class="text-xs text-gray-400 block font-bold">الدخل المتوقع اليوم</span>
+                            <span id="statTotalIncome" class="text-2xl font-black text-brand-orange">1000 دج</span>
+                        </div>
+                        <i class="fa-solid fa-coins text-3xl text-yellow-500"></i>
+                    </div>
+                    <div class="bg-gray-900 p-4 rounded-xl border border-gray-800 flex items-center justify-between">
+                        <div>
+                            <span class="text-xs text-gray-400 block font-bold">الأجهزة المشغولة حالياً</span>
+                            <span id="statActiveSeats" class="text-2xl font-black text-green-400">5 أجهزة</span>
+                        </div>
+                        <i class="fa-solid fa-desktop text-3xl text-green-500"></i>
+                    </div>
+                </div>
+
+                <!-- Add Manual Booking Form with Price Field -->
+                <div class="bg-gray-900 p-4 rounded-xl border border-gray-800 mb-6">
+                    <h4 class="font-bold text-sm text-brand-blue mb-3"><i class="fa-solid fa-plus-circle ml-1"></i> إضافة حجز يدوي سريع (مباشر أو هاتف):</h4>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-7 gap-3">
+                        <input type="text" id="manualName" placeholder="اسم الزبون" class="bg-gray-800 border border-gray-700 text-xs text-white p-2.5 rounded-lg focus:outline-none">
+                        <select id="manualPlatform" onchange="toggleManualInputType()" class="bg-gray-800 border border-gray-700 text-xs text-white p-2.5 rounded-lg focus:outline-none">
+                            <option value="CS 1.6 (PC)">CS 1.6 (PC)</option>
+                            <option value="PS4 (1v1)">PS4 (1v1)</option>
+                            <option value="PS4 (2v2)">PS4 (2v2)</option>
+                            <option value="كراء PS4 (ليلة)">كراء PS4 (ليلة)</option>
+                        </select>
+                        <input type="text" id="manualSeats" placeholder="الأجهزة (مثال: PC #1, PC #2)" class="bg-gray-800 border border-gray-700 text-xs text-white p-2.5 rounded-lg focus:outline-none">
+                        <input type="time" id="manualArrival" value="17:00" class="bg-gray-800 border border-gray-700 text-xs text-white p-2.5 rounded-lg focus:outline-none">
+                        <input type="text" id="manualQty" placeholder="المدة / المباريات" class="bg-gray-800 border border-gray-700 text-xs text-white p-2.5 rounded-lg focus:outline-none">
+                        <input type="number" id="manualPrice" placeholder="المبلغ (دج)" class="bg-gray-800 border border-gray-700 text-xs text-white p-2.5 rounded-lg focus:outline-none">
+                        <button onclick="addManualBooking()" class="bg-brand-blue hover:bg-blue-400 text-black font-extrabold text-xs p-2.5 rounded-lg transition">
+                            إضافة الحجز
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Table -->
+                <div class="overflow-x-auto rounded-xl border border-gray-800">
+                    <table class="w-full text-sm text-right">
+                        <thead class="bg-gray-900 text-brand-blue text-xs uppercase border-b border-gray-800">
+                            <tr>
+                                <th class="p-3">اسم الزبون</th>
+                                <th class="p-3">نوع الخدمة</th>
+                                <th class="p-3">الأجهزة المحجوزة بالضبط</th>
+                                <th class="p-3">وقت الحضور</th>
+                                <th class="p-3">المدة / المباريات</th>
+                                <th class="p-3">المبلغ</th>
+                                <th class="p-3 text-center">إجراء (حذف)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="adminBookingsTable" class="divide-y divide-gray-800 bg-brand-card">
+                            <!-- Dynamic Table Rows -->
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-black py-8 border-t border-gray-900 text-center text-gray-500 text-sm">
+        <p>© 2026 A@M Game - صالة ألعاب القل، سكيكدة. جميع الحقوق محفوظة.</p>
+    </footer>
+
+    <!-- Logic Script -->
+    <script>
+        let currentPlatform = 'pc';
+        let currentPrice = 100;
+        let selectedSeats = [];
+
+        // Encrypted PIN representation for "a@m@j"
+        const SEC_HASH = "YUBtQGo=";
+
+        // Initial bookings array
+        let bookingsList = JSON.parse(localStorage.getItem('am_game_bookings')) || [
+            { id: 1, name: 'حسام وأصدقاؤه', platform: 'CS 1.6 (PC)', seats: 'PC #1, PC #2, PC #3, PC #4, PC #5', arrival: '16:30', qty: '2 ساعتان', price: '1000 دج', priceNum: 1000, seatsCount: 5 }
+        ];
+
+        function closeWelcomeModal() {
+            document.getElementById('welcomeModal').classList.add('opacity-0', 'pointer-events-none');
+            setTimeout(() => {
+                document.getElementById('welcomeModal').classList.add('hidden');
+            }, 300);
+        }
+
+        function setPlatform(platform, price) {
+            currentPlatform = platform;
+            currentPrice = price;
+            selectedSeats = [];
+
+            // UI Highlights
+            document.getElementById('btn-pc').className = platform === 'pc' ? 'p-3 rounded-xl border-2 border-brand-blue bg-gray-800 font-bold text-center' : 'p-3 rounded-xl border border-gray-700 bg-gray-900 font-bold text-center';
+            document.getElementById('btn-ps4-1').className = platform === 'ps4-1v1' ? 'p-3 rounded-xl border-2 border-brand-orange bg-gray-800 font-bold text-center' : 'p-3 rounded-xl border border-gray-700 bg-gray-900 font-bold text-center';
+            document.getElementById('btn-ps4-2').className = platform === 'ps4-2v2' ? 'p-3 rounded-xl border-2 border-brand-blue bg-gray-800 font-bold text-center' : 'p-3 rounded-xl border border-gray-700 bg-gray-900 font-bold text-center';
+            document.getElementById('btn-ps4-night').className = platform === 'ps4-night' ? 'p-3 rounded-xl border-2 border-purple-500 bg-gray-800 font-bold text-center' : 'p-3 rounded-xl border border-gray-700 bg-gray-900 font-bold text-center';
+
+            if (platform === 'pc') {
+                document.getElementById('pcSliderContainer').classList.remove('hidden');
+                document.getElementById('numberInputContainer').classList.add('hidden');
+                document.getElementById('quantityLabel').innerText = '3. اختر الوقت (بالساعات والدقائق):';
+                document.getElementById('summaryQtyTitle').innerText = 'المدة:';
+            } else {
+                document.getElementById('pcSliderContainer').classList.add('hidden');
+                document.getElementById('numberInputContainer').classList.remove('hidden');
+
+                if (platform === 'ps4-night') {
+                    document.getElementById('quantityLabel').innerText = '3. عدد الليالي:';
+                    document.getElementById('summaryQtyTitle').innerText = 'الليالي:';
+                } else {
+                    document.getElementById('quantityLabel').innerText = '3. عدد المباريات:';
+                    document.getElementById('summaryQtyTitle').innerText = 'المباريات:';
+                }
+            }
+
+            renderSeats();
+            calculateTotal();
+        }
+
+        function renderSeats() {
+            const grid = document.getElementById('seatsGrid');
+            grid.innerHTML = '';
+            const count = currentPlatform === 'pc' ? 10 : 6;
+            const prefix = currentPlatform === 'pc' ? 'PC #' : 'PS4 #';
+
+            for (let i = 1; i <= count; i++) {
+                const btn = document.createElement('button');
+                btn.className = 'seat-btn p-3 rounded-lg border border-gray-700 bg-gray-800 text-xs font-bold hover:border-brand-blue transition';
+                btn.innerText = `${prefix}${i}`;
+                btn.onclick = () => toggleSeat(`${prefix}${i}`, btn);
+                grid.appendChild(btn);
+            }
+        }
+
+        function toggleSeat(seatName, btnElement) {
+            if (selectedSeats.includes(seatName)) {
+                selectedSeats = selectedSeats.filter(s => s !== seatName);
+                btnElement.classList.remove('selected');
+            } else {
+                selectedSeats.push(seatName);
+                btnElement.classList.add('selected');
+            }
+            calculateTotal();
+        }
+
+        function sortSeats(seatsArray) {
+            return seatsArray.sort((a, b) => {
+                const numA = parseInt(a.replace(/[^0-9]/g, ''));
+                const numB = parseInt(b.replace(/[^0-9]/g, ''));
+                return numA - numB;
+            });
+        }
+
+        function calculateTotal() {
+            const customer = document.getElementById('customerName').value.trim() || 'زائر';
+            const arrival = document.getElementById('arrivalTime').value || '16:00';
+            let qtyText = '';
+            let total = 0;
+
+            if (currentPlatform === 'pc') {
+                const minutes = parseInt(document.getElementById('timeSlider').value) || 60;
+                const hours = Math.floor(minutes / 60);
+                const remMins = minutes % 60;
+
+                if (hours > 0 && remMins > 0) qtyText = `${hours} ساعة و ${remMins} دقيقة`;
+                else if (hours > 0) qtyText = `${hours} ساعة`;
+                else qtyText = `${remMins} دقيقة`;
+
+                document.getElementById('timeDisplayBadge').innerText = qtyText;
+                total = (minutes / 60) * currentPrice * (selectedSeats.length || 1);
+            } else {
+                const num = parseInt(document.getElementById('quantityInput').value) || 1;
+                qtyText = currentPlatform === 'ps4-night' ? `${num} ليلة` : `${num} مباراة`;
+                document.getElementById('timeDisplayBadge').innerText = qtyText;
+                total = num * currentPrice * (selectedSeats.length || 1);
+            }
+
+            let platformLabel = 'CS 1.6 (PC)';
+            if (currentPlatform === 'ps4-1v1') platformLabel = 'PS4 (1v1)';
+            if (currentPlatform === 'ps4-2v2') platformLabel = 'PS4 (2v2)';
+            if (currentPlatform === 'ps4-night') platformLabel = 'كراء PS4 (ليلة)';
+
+            const sortedSeats = sortSeats([...selectedSeats]);
+
+            document.getElementById('summaryCustomer').innerText = customer;
+            document.getElementById('summaryPlatform').innerText = platformLabel;
+            document.getElementById('summarySeats').innerText = sortedSeats.length > 0 ? sortedSeats.join(', ') : 'لم يتم تحديد مقعد';
+            document.getElementById('summaryQty').innerText = qtyText;
+            document.getElementById('summaryArrival').innerText = arrival;
+            document.getElementById('summaryTotal').innerText = `${Math.round(total)} دج`;
+        }
+
+        function sendWhatsApp(phone) {
+            const customer = document.getElementById('customerName').value.trim() || 'زائر';
+            const arrival = document.getElementById('arrivalTime').value || 'غير محدد';
+            const sortedSeats = selectedSeats.length > 0 ? sortSeats([...selectedSeats]).join(', ') : 'غير محدد';
+            const qtyText = document.getElementById('summaryQty').innerText;
+            const platformLabel = document.getElementById('summaryPlatform').innerText;
+            const totalStr = document.getElementById('summaryTotal').innerText;
+            const priceNum = parseInt(totalStr.replace(/[^0-9]/g, '')) || 0;
+
+            const newBooking = {
+                id: Date.now(),
+                name: customer,
+                platform: platformLabel,
+                seats: sortedSeats,
+                arrival: arrival,
+                qty: qtyText,
+                price: totalStr,
+                priceNum: priceNum,
+                seatsCount: selectedSeats.length || 1
+            };
+
+            bookingsList.push(newBooking);
+            saveAndRenderBookings();
+
+            const text = `السلام عليكم، أريد تأكيد حجز في صالة A@M Game بالقل:%0A- اسم الزبون: ${customer}%0A- نوع الخدمة: ${platformLabel}%0A- الأجهزة المحجوزة بالضبط: ${sortedSeats}%0A- وقت الوصول المتوقع: ${arrival}%0A- المدة / الكمية: ${qtyText}%0A- المبلغ الإجمالي: ${totalStr}`;
+            window.open(`https://wa.me/213${phone.substring(1)}?text=${text}`, '_blank');
+        }
+
+        // Admin Security & Functions
+        function unlockAdmin() {
+            const pin = prompt("أدخل رمز المرور الخاص بالمالكين والعامل:");
+            if (pin && btoa(pin) === SEC_HASH) {
+                document.getElementById('adminPanel').classList.remove('hidden');
+                document.getElementById('adminLoginBtn').classList.add('hidden');
+                renderAdminTable();
+            } else if (pin !== null) {
+                alert("رمز المرور غير صحيح!");
+            }
+        }
+
+        function lockAdmin() {
+            document.getElementById('adminPanel').classList.add('hidden');
+            document.getElementById('adminLoginBtn').classList.remove('hidden');
+        }
+
+        function toggleManualInputType() {
+            const val = document.getElementById('manualPlatform').value;
+            const qtyInput = document.getElementById('manualQty');
+            if (val.includes('PC')) {
+                qtyInput.placeholder = 'المدة (مثال: 2 ساعتان)';
+            } else if (val.includes('ليلة')) {
+                qtyInput.placeholder = 'عدد الليالي (مثال: 1 ليلة)';
+            } else {
+                qtyInput.placeholder = 'عدد المباريات (مثال: 3 مباريات)';
+            }
+        }
+
+        function renderAdminTable() {
+            const tbody = document.getElementById('adminBookingsTable');
+            tbody.innerHTML = '';
+
+            let totalIncome = 0;
+            let totalSeats = 0;
+
+            bookingsList.forEach((item) => {
+                totalIncome += item.priceNum || 0;
+                totalSeats += item.seatsCount || 1;
+
+                const tr = document.createElement('tr');
+                tr.className = 'hover:bg-gray-900/50 transition';
+                tr.innerHTML = `
+                    <td class="p-3 font-bold text-white">${item.name}</td>
+                    <td class="p-3 text-brand-blue">${item.platform}</td>
+                    <td class="p-3 font-mono text-xs text-brand-orange">${item.seats}</td>
+                    <td class="p-3 font-bold text-yellow-400">${item.arrival}</td>
+                    <td class="p-3 text-gray-300">${item.qty}</td>
+                    <td class="p-3 font-bold text-green-400">${item.price}</td>
+                    <td class="p-3 text-center">
+                        <button onclick="deleteBooking(${item.id})" class="bg-red-900/40 hover:bg-red-700 text-red-300 p-2 rounded-lg transition text-xs" title="حذف الحجز">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            document.getElementById('statTotalBookings').innerText = bookingsList.length;
+            document.getElementById('statTotalIncome').innerText = `${totalIncome} دج`;
+            document.getElementById('statActiveSeats').innerText = `${totalSeats} أجهزة`;
+        }
+
+        function deleteBooking(id) {
+            if (confirm("هل انت متأكد من حذف هذا الحجز من الجدول؟")) {
+                bookingsList = bookingsList.filter(b => b.id !== id);
+                saveAndRenderBookings();
+            }
+        }
+
+        function clearAllBookings() {
+            if (confirm("هل تريد إفراغ جدول الحجوزات بالكامل لبداية يوم جديد؟")) {
+                bookingsList = [];
+                saveAndRenderBookings();
+            }
+        }
+
+        function addManualBooking() {
+            const name = document.getElementById('manualName').value.trim() || 'زبون محلي';
+            const platform = document.getElementById('manualPlatform').value;
+            const seats = document.getElementById('manualSeats').value.trim() || 'غير محدد';
+            const arrival = document.getElementById('manualArrival').value || '17:00';
+            const qty = document.getElementById('manualQty').value.trim() || '1';
+            let inputPrice = document.getElementById('manualPrice').value.trim();
+
+            let computedPrice = 0;
+
+            // Extract seat count
+            let seatsNum = 1;
+            if (seats.includes(',')) {
+                seatsNum = seats.split(',').length;
+            }
+
+            // Extract quantity number
+            let qtyNum = parseInt(qty.replace(/[^0-9]/g, '')) || 1;
+
+            if (inputPrice !== '' && !isNaN(parseInt(inputPrice))) {
+                computedPrice = parseInt(inputPrice);
+            } else {
+                // Auto calculate price if empty
+                if (platform.includes('PC')) {
+                    computedPrice = qtyNum * 100 * seatsNum;
+                } else if (platform.includes('1v1')) {
+                    computedPrice = qtyNum * 50 * seatsNum;
+                } else if (platform.includes('2v2')) {
+                    computedPrice = qtyNum * 80 * seatsNum;
+                } else if (platform.includes('ليلة')) {
+                    computedPrice = qtyNum * 600 * seatsNum;
+                }
+            }
+
+            const newBooking = {
+                id: Date.now(),
+                name: name,
+                platform: platform,
+                seats: seats,
+                arrival: arrival,
+                qty: qty.includes('ساعة') || qty.includes('مباراة') || qty.includes('ليلة') ? qty : `${qtyNum} (مباريات/ساعات)`,
+                price: `${computedPrice} دج`,
+                priceNum: computedPrice,
+                seatsCount: seatsNum
+            };
+
+            bookingsList.push(newBooking);
+            saveAndRenderBookings();
+
+            // Clear input fields
+            document.getElementById('manualName').value = '';
+            document.getElementById('manualSeats').value = '';
+            document.getElementById('manualQty').value = '';
+            document.getElementById('manualPrice').value = '';
+        }
+
+        function saveAndRenderBookings() {
+            localStorage.setItem('am_game_bookings', JSON.stringify(bookingsList));
+            renderAdminTable();
+        }
+
+        // Initialize
+        setPlatform('pc', 100);
+    </script>
+</body>
+</html>
