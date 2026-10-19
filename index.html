@@ -74,7 +74,7 @@
 </head>
 <body class="bg-brand-dark text-gray-100 min-h-screen flex flex-col justify-between">
 
-    <!-- Welcome Modal / QR Scan Landing Screen (Install App or Web Choice) -->
+    <!-- Welcome Modal / QR Scan Landing Screen (One Click Install or Web) -->
     <div id="welcomeModal" class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/90 backdrop-blur-md transition-opacity duration-300">
         <div class="bg-brand-card max-w-lg w-full rounded-3xl p-6 md:p-8 border border-brand-blue/50 text-center shadow-[0_0_50px_rgba(0,240,255,0.2)] relative overflow-hidden max-h-[95vh] overflow-y-auto">
             <div class="w-20 h-20 bg-gradient-to-tr from-brand-orange to-brand-blue rounded-2xl mx-auto flex items-center justify-center text-black font-black text-3xl mb-4 shadow-lg">
@@ -92,13 +92,13 @@
                 </div>
             </div>
 
-            <!-- Install App (PWA) Option Box -->
-            <div id="installBox" class="bg-gray-900/90 p-4 rounded-2xl border border-brand-orange/40 text-center mb-6 space-y-3">
+            <!-- Direct Install Button Box -->
+            <div class="bg-gray-900/90 p-4 rounded-2xl border border-brand-orange/40 text-center mb-4 space-y-3">
                 <div class="text-brand-orange font-bold text-xs flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-mobile-screen-button text-lg"></i> هل تريد تثبيت التطبيق على هاتفك؟
+                    <i class="fa-solid fa-mobile-screen-button text-lg"></i> هل تريد تثبيت التطبيق على هاتفك بنقرة واحدة؟
                 </div>
-                <button id="installAppBtn" onclick="installPWAApp()" class="w-full bg-gradient-to-r from-brand-orange to-orange-600 text-black font-extrabold py-2.5 px-4 rounded-xl hover:opacity-90 transition shadow-md text-xs">
-                    <i class="fa-solid fa-download ml-1"></i> تثبيت تطبيق A@M Game على الشاشة الرئيسية
+                <button onclick="triggerInstall()" class="w-full bg-gradient-to-r from-brand-orange to-orange-600 text-black font-extrabold py-3 px-4 rounded-xl hover:opacity-90 transition shadow-lg text-sm flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-download"></i> تثبيت التطبيق الآن بضغطة زر
                 </button>
             </div>
 
@@ -558,7 +558,7 @@
         <p>© 2026 A@M Game - صالة ألعاب القل، سكيكدة. جميع الحقوق محفوظة.</p>
     </footer>
 
-    <!-- Logic Script & PWA Install Handler -->
+    <!-- Logic Script & Direct Install Handler -->
     <script>
         const firebaseConfig = {
             apiKey: "AIzaSyBf7TlgpXTV83fFNlyPeRO217KFE_84z_w",
@@ -579,20 +579,19 @@
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
             deferredPrompt = e;
-            document.getElementById('installBox').style.display = 'block';
         });
 
-        function installPWAApp() {
+        function triggerInstall() {
             if (deferredPrompt) {
                 deferredPrompt.prompt();
                 deferredPrompt.userChoice.then((choiceResult) => {
                     if (choiceResult.outcome === 'accepted') {
-                        console.log('تم قبول تثبيت التطبيق');
+                        console.log('تم تثبيت التطبيق بنجاح');
                     }
                     deferredPrompt = null;
                 });
             } else {
-                alert("لثبيت التطبيق يرجى النقر على خيارات المتصفح (القائمة الثلاثية أعلى المتصفح) ثم اختيار 'إضافة إلى الشاشة الرئيسية' (Add to Home screen).");
+                alert("التطبيق جاهز! إذا لم يظهر مربع التثبيت التلقائي، يمكنك تثبيته مباشرة بالنقر على نقاط المتصفح وثم اختيار 'إضافة إلى الشاشة الرئيسية'.");
             }
         }
 
