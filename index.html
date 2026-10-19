@@ -19,9 +19,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
     
     <!-- Firebase App & Firestore SDKs -->
-    <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 
     <script>
         tailwind.config = {
@@ -68,35 +67,12 @@
             font-weight: bold;
             box-shadow: 0 0 15px #00f0ff;
         }
-        .seat-btn.booked {
-            background-color: #ef4444 !important;
-            color: #ffffff !important;
-            border-color: #dc2626 !important;
-            cursor: not-allowed;
-            opacity: 0.8;
-        }
         input[type=range] {
             accent-color: #00f0ff;
-        }
-        .platform-btn-active-blue {
-            border-color: #00f0ff !important;
-            background-color: rgba(0, 240, 255, 0.1) !important;
-            box-shadow: 0 0 15px rgba(0, 240, 255, 0.3);
-        }
-        .platform-btn-active-orange {
-            border-color: #ff6600 !important;
-            background-color: rgba(255, 102, 0, 0.1) !important;
-            box-shadow: 0 0 15px rgba(255, 102, 0, 0.3);
         }
     </style>
 </head>
 <body class="bg-brand-dark text-gray-100 min-h-screen flex flex-col justify-between">
-
-    <!-- Toast Notification Overlay -->
-    <div id="toastNotification" class="fixed top-5 left-1/2 -translate-x-1/2 z-[200] hidden bg-brand-card border border-brand-blue/50 text-white px-6 py-3 rounded-2xl shadow-[0_0_25px_rgba(0,240,255,0.4)] text-sm font-bold flex items-center gap-3 transition-all">
-        <i id="toastIcon" class="fa-solid fa-circle-check text-brand-blue text-lg"></i>
-        <span id="toastMessage">تمت العملية بنجاح</span>
-    </div>
 
     <!-- Welcome Modal / QR Scan Landing Screen -->
     <div id="welcomeModal" class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/90 backdrop-blur-md transition-opacity duration-300">
@@ -116,11 +92,6 @@
                 </div>
             </div>
 
-            <!-- Developer / Creator Badge -->
-            <div class="bg-blue-950/40 border border-brand-blue/30 rounded-2xl p-3 mb-4 text-center">
-                <p class="text-xs text-gray-300">مطور ومصمم التطبيق: <strong class="text-brand-blue">Nasro Mhb</strong></p>
-            </div>
-
             <!-- Direct Install Button Box -->
             <div class="bg-gray-900/90 p-4 rounded-2xl border border-brand-orange/40 text-center mb-4 space-y-3">
                 <div class="text-brand-orange font-bold text-xs flex items-center justify-center gap-2">
@@ -135,10 +106,11 @@
                 <button onclick="closeWelcomeModal()" class="w-full bg-gradient-to-r from-brand-blue to-blue-600 text-black font-extrabold py-3 px-6 rounded-xl hover:opacity-90 transition shadow-lg text-sm">
                     🌐 متابعة الحجز والتصفح عبر الويب مباشرة
                 </button>
-                <a href="https://www.google.com/maps/search/?api=1&query=37.0069,6.5611" target="_blank" class="w-full bg-gray-800 hover:bg-gray-700 text-brand-orange font-bold py-2.5 px-4 rounded-xl border border-brand-orange/30 text-xs transition flex items-center justify-center gap-2">
+                <a href="https://maps.app.goo.gl/4zKgwbyikg3E1dhXA" target="_blank" class="w-full bg-gray-800 hover:bg-gray-700 text-brand-orange font-bold py-2.5 px-4 rounded-xl border border-brand-orange/30 text-xs transition flex items-center justify-center gap-2">
                     <i class="fa-solid fa-location-dot"></i> فتح موقع الصالة الدقيق على الخريطة (GPS)
                 </a>
             </div>
+            <div class="mt-4 text-[11px] text-gray-500 font-bold">صانع التطبيق: Nasro Mhb</div>
         </div>
     </div>
 
@@ -146,12 +118,12 @@
     <header class="sticky top-0 z-50 bg-brand-dark/95 backdrop-blur border-b border-gray-800 shadow-lg">
         <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
             <div class="flex items-center space-x-3 space-x-reverse">
-                <div class="w-12 h-12 bg-gradient-to-tr from-brand-orange to-brand-blue rounded-xl flex items-center justify-center shadow-lg font-black text-xl text-black">
-                    A@M
+                <div class="w-12 h-12 bg-gradient-to-tr from-brand-orange to-brand-blue rounded-xl flex items-center justify-center shadow-lg">
+                    <span class="font-bold text-2xl text-black">A@M</span>
                 </div>
                 <div>
                     <h1 class="text-2xl font-black tracking-wider"><span class="text-brand-blue">A@M</span> <span class="text-brand-orange">GAME</span></h1>
-                    <a href="https://www.google.com/maps/search/?api=1&query=37.0069,6.5611" target="_blank" class="text-xs text-gray-400 hover:text-brand-orange transition flex items-center gap-1">
+                    <a href="https://maps.app.goo.gl/4zKgwbyikg3E1dhXA" target="_blank" class="text-xs text-gray-400 hover:text-brand-orange transition flex items-center gap-1">
                         <i class="fa-solid fa-location-dot text-brand-orange"></i> القل، سكيكدة (موقع GPS الدقيق)
                     </a>
                 </div>
@@ -161,12 +133,11 @@
                 <a href="#rules" class="hover:text-brand-orange transition">قوانين الصالة</a>
                 <a href="#features" class="hover:text-brand-blue transition">التكييف والمراقبة</a>
                 <a href="#booking" class="hover:text-brand-orange transition">نظام الحجز</a>
-                <a href="#adminSection" class="hover:text-brand-blue transition">لوحة الإدارة</a>
                 <a href="#team" class="hover:text-brand-blue transition">فريق العمل</a>
             </nav>
 
             <div class="flex items-center gap-2">
-                <a href="https://www.google.com/maps/search/?api=1&query=37.0069,6.5611" target="_blank" class="hidden sm:flex bg-gray-800 border border-brand-orange/40 hover:bg-gray-700 text-brand-orange font-bold px-3 py-2 rounded-lg transition text-xs items-center gap-1">
+                <a href="https://maps.app.goo.gl/4zKgwbyikg3E1dhXA" target="_blank" class="hidden sm:flex bg-gray-800 border border-brand-orange/40 hover:bg-gray-700 text-brand-orange font-bold px-3 py-2 rounded-lg transition text-xs items-center gap-1">
                     <i class="fa-solid fa-map-location-dot"></i> GPS
                 </a>
                 <a href="#booking" class="bg-gradient-to-r from-brand-blue to-blue-600 text-black font-extrabold px-4 py-2 rounded-lg hover:opacity-90 transition shadow-lg text-xs md:text-sm">
@@ -186,515 +157,486 @@
                 عش متعة التنافس في <span class="text-brand-blue neon-text-blue">A@M GAME</span>
             </h2>
             <p class="text-gray-300 text-lg md:text-xl max-w-2xl mx-auto mb-8 leading-relaxed">
-                تحديات حماسية في <strong class="text-white">CS 1.6</strong> بالساعة والدقائق، ومباريات <strong class="text-white">FC 27</strong> و <strong class="text-white">PES 2027</strong> بالمباراة، أو كراء <strong class="text-white">PS4</strong> ليلة كاملة بأفضل الأسعار.
+                تحديات حماسية في **CS 1.6** بالساعة والدقائق، ومباريات **FC 27** و **PES 2027** بالمباراة، أو كراء **PS4** ليلة كاملة بأفضل الأسعار.
             </p>
 
-            <!-- Cards with Images placed properly -->
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto mt-6">
-                <!-- CS 1.6 -->
-                <div class="bg-brand-card p-4 rounded-2xl border border-gray-800 hover:border-brand-blue transition text-center group">
-                    <div class="w-full h-24 mb-3 rounded-xl bg-gray-900 border border-gray-800 flex items-center justify-center p-2 overflow-hidden">
-                        <img src="https://raw.githubusercontent.com/nasromouhoub191-hub/a-m/main/PC.jpg" alt="CS 1.6 PC" class="max-h-full max-w-full object-contain group-hover:scale-105 transition duration-300">
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 max-w-5xl mx-auto mt-6">
+                <!-- PC Card -->
+                <div class="bg-brand-card rounded-2xl border border-gray-800 overflow-hidden shadow-xl text-center group">
+                    <div class="h-44 overflow-hidden relative">
+                        <img src="https://raw.githubusercontent.com/nasromouhoub191-hub/a-m/main/PC.jpg" alt="CS 1.6 PC" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
                     </div>
-                    <h3 class="font-bold text-sm">CS 1.6 LAN</h3>
-                    <p class="text-brand-orange font-black text-lg mt-1">100 دج / ساعة</p>
+                    <div class="p-4">
+                        <h3 class="font-bold text-sm text-white mb-1">CS 1.6 LAN</h3>
+                        <p class="text-brand-orange font-black text-lg">100 دج / ساعة</p>
+                    </div>
                 </div>
-
-                <!-- PS4 1v1 -->
-                <div class="bg-brand-card p-4 rounded-2xl border border-gray-800 hover:border-brand-orange transition text-center group">
-                    <div class="w-full h-24 mb-3 rounded-xl bg-gray-900 border border-gray-800 flex items-center justify-center p-2 overflow-hidden">
-                        <img src="https://raw.githubusercontent.com/nasromouhoub191-hub/a-m/main/2ps4.png" alt="PS4 1v1" class="max-h-full max-w-full object-contain group-hover:scale-105 transition duration-300">
+                <!-- PS4 1v1 Card -->
+                <div class="bg-brand-card rounded-2xl border border-gray-800 overflow-hidden shadow-xl text-center group">
+                    <div class="h-44 overflow-hidden relative">
+                        <img src="https://raw.githubusercontent.com/nasromouhoub191-hub/a-m/main/2ps4.png" alt="PS4 1v1" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
                     </div>
-                    <h3 class="font-bold text-sm">PS4 - 1v1</h3>
-                    <p class="text-brand-blue font-black text-lg mt-1">50 دج / مباراة</p>
+                    <div class="p-4">
+                        <h3 class="font-bold text-sm text-white mb-1">PS4 - 1v1</h3>
+                        <p class="text-brand-blue font-black text-lg">50 دج / مباراة</p>
+                    </div>
                 </div>
-
-                <!-- PS4 2v2 -->
-                <div class="bg-brand-card p-4 rounded-2xl border border-gray-800 hover:border-brand-blue transition text-center group">
-                    <div class="w-full h-24 mb-3 rounded-xl bg-gray-900 border border-gray-800 flex items-center justify-center p-2 overflow-hidden">
-                        <img src="https://raw.githubusercontent.com/nasromouhoub191-hub/a-m/main/4ps4m.png" alt="PS4 2v2" class="max-h-full max-w-full object-contain group-hover:scale-105 transition duration-300">
+                <!-- PS4 2v2 Card -->
+                <div class="bg-brand-card rounded-2xl border border-gray-800 overflow-hidden shadow-xl text-center group">
+                    <div class="h-44 overflow-hidden relative">
+                        <img src="https://raw.githubusercontent.com/nasromouhoub191-hub/a-m/main/4ps4m.png" alt="PS4 2v2" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
                     </div>
-                    <h3 class="font-bold text-sm">PS4 - 2v2 (زوجي)</h3>
-                    <p class="text-brand-orange font-black text-lg mt-1">80 دج / مباراة</p>
+                    <div class="p-4">
+                        <h3 class="font-bold text-sm text-white mb-1">PS4 - 2v2 (زوجي)</h3>
+                        <p class="text-brand-orange font-black text-lg">80 دج / مباراة</p>
+                    </div>
                 </div>
-
-                <!-- PS4 Night Rental -->
-                <div class="bg-brand-card p-4 rounded-2xl border border-gray-800 hover:border-purple-500 transition text-center group">
-                    <div class="w-full h-24 mb-3 rounded-xl bg-gray-900 border border-gray-800 flex items-center justify-center p-2 overflow-hidden">
-                        <img src="https://raw.githubusercontent.com/nasromouhoub191-hub/a-m/main/%D9%83%D8%B1%D8%A7%D8%A1%20%D9%84%D9%8A%D9%84%D8%A9%20.png" alt="كراء ليلة" class="max-h-full max-w-full object-contain group-hover:scale-105 transition duration-300">
+                <!-- Night Rental Card -->
+                <div class="bg-brand-card rounded-2xl border border-gray-800 overflow-hidden shadow-xl text-center group">
+                    <div class="h-44 overflow-hidden relative">
+                        <img src="https://raw.githubusercontent.com/nasromouhoub191-hub/a-m/main/%D9%83%D8%B1%D8%A7%D8%A1%20%D9%84%D9%8A%D9%84%D8%A9%20.png" alt="كراء ليلة" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
                     </div>
-                    <h3 class="font-bold text-sm">كراء PS4 ليلة</h3>
-                    <p class="text-purple-400 font-black text-lg mt-1">600 دج / ليلة</p>
+                    <div class="p-4">
+                        <h3 class="font-bold text-sm text-white mb-1">كراء PS4 ليلة</h3>
+                        <p class="text-purple-400 font-black text-lg">600 دج / ليلة</p>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- SECTION: Rules (قوانين الصالة) -->
+    <!-- SECTION 1: Rules -->
     <section id="rules" class="py-12 px-4 max-w-5xl mx-auto w-full">
-        <div class="bg-brand-card p-6 md:p-8 rounded-3xl border border-brand-orange/30 shadow-xl">
-            <h2 class="text-2xl md:text-3xl font-black text-brand-orange neon-text-orange mb-6 text-center flex items-center justify-center gap-2">
-                <i class="fa-solid fa-scale-balanced"></i> قوانين وشروط الصالة
-            </h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs md:text-sm">
-                <div class="bg-gray-900/80 p-4 rounded-2xl border border-gray-800 flex items-start gap-3">
-                    <span class="text-brand-orange font-black text-lg">1.</span>
-                    <p class="text-gray-300 leading-relaxed">الاحترام المتبادل بين جميع اللاعبين والابتعاد عن الكلام المسيء داخل الصالة.</p>
+        <div class="bg-brand-card p-6 md:p-8 rounded-3xl border border-gray-800 shadow-2xl relative overflow-hidden">
+            <div class="text-center mb-8">
+                <h2 class="text-2xl md:text-3xl font-black text-brand-orange flex items-center justify-center gap-2 mb-2">
+                    <i class="fa-solid fa-triangle-exclamation"></i> قوانين وشروط الصالة
+                </h2>
+                <p class="text-gray-400 text-xs md:text-sm">يرجى الالتزام الصارم بهذه القواعد لضمان راحة واحترام الجميع</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                <div class="bg-gray-900/90 border border-gray-800 p-4 rounded-xl flex items-start gap-3">
+                    <i class="fa-solid fa-ban text-red-500 text-lg mt-0.5"></i>
+                    <div>
+                        <h4 class="font-bold text-white text-xs md:text-sm">ممنوع التدخين</h4>
+                        <p class="text-gray-400 text-xs mt-0.5">التدخين بجميع أنواعه ممنوع نهائياً داخل الصالة.</p>
+                    </div>
                 </div>
-                <div class="bg-gray-900/80 p-4 rounded-2xl border border-gray-800 flex items-start gap-3">
-                    <span class="text-brand-orange font-black text-lg">2.</span>
-                    <p class="text-gray-300 leading-relaxed">الحفاظ على سلامة العتاد والأجهزة (اليدين، الشاشات، السماعات) وإبلاغ المشرف فوراً عن أي خلل.</p>
+
+                <div class="bg-gray-900/90 border border-gray-800 p-4 rounded-xl flex items-start gap-3">
+                    <i class="fa-solid fa-face-angry text-orange-500 text-lg mt-0.5"></i>
+                    <div>
+                        <h4 class="font-bold text-white text-xs md:text-sm">ممنوع "الخاسر حرام"</h4>
+                        <p class="text-gray-400 text-xs mt-0.5">تفادي هذه الأجواء للحفاظ على الروح الرياضية والطيبة بين اللاعبين.</p>
+                    </div>
                 </div>
-                <div class="bg-gray-900/80 p-4 rounded-2xl border border-gray-800 flex items-start gap-3">
-                    <span class="text-brand-orange font-black text-lg">3.</span>
-                    <p class="text-gray-300 leading-relaxed">الالتزام بالوقت المحدد والمحجوز للجهاز لإتاحة الفرصة لباقي اللاعبين.</p>
+
+                <div class="bg-gray-900/90 border border-gray-800 p-4 rounded-xl flex items-start gap-3">
+                    <i class="fa-solid fa-volume-xmark text-yellow-500 text-lg mt-0.5"></i>
+                    <div>
+                        <h4 class="font-bold text-white text-xs md:text-sm">ممنوع السب والشتم والصراخ</h4>
+                        <p class="text-gray-400 text-xs mt-0.5">الحفاظ على الهدوء والاحترام المتبادل وعدم الإزعاج.</p>
+                    </div>
                 </div>
-                <div class="bg-gray-900/80 p-4 rounded-2xl border border-gray-800 flex items-start gap-3">
-                    <span class="text-brand-orange font-black text-lg">4.</span>
-                    <p class="text-gray-300 leading-relaxed">المحافظة على نظافة المكان والترتيب العام للصالة.</p>
+
+                <div class="bg-gray-900/90 border border-gray-800 p-4 rounded-xl flex items-start gap-3">
+                    <i class="fa-solid fa-people-group text-blue-400 text-lg mt-0.5"></i>
+                    <div>
+                        <h4 class="font-bold text-white text-xs md:text-sm">ممنوع التجمع أمام المحل</h4>
+                        <p class="text-gray-400 text-xs mt-0.5">عند الخروج، يرجى عدم التجمع أمام المحل احتراماً لجيران الصالة وسكينة الحي.</p>
+                    </div>
+                </div>
+
+                <div class="bg-gray-900/90 border border-gray-800 p-4 rounded-xl flex items-start gap-3">
+                    <i class="fa-solid fa-coins text-green-400 text-lg mt-0.5"></i>
+                    <div>
+                        <h4 class="font-bold text-white text-xs md:text-sm">الدفع المسبق</h4>
+                        <p class="text-gray-400 text-xs mt-0.5">الدفع يكون مسبقاً للمأكولات والمشروبات والخدمات.</p>
+                    </div>
+                </div>
+
+                <div class="bg-gray-900/90 border border-gray-800 p-4 rounded-xl flex items-start gap-3">
+                    <i class="fa-solid fa-mosque text-purple-400 text-lg mt-0.5"></i>
+                    <div>
+                        <h4 class="font-bold text-white text-xs md:text-sm">أوقات الصلاة</h4>
+                        <p class="text-gray-400 text-xs mt-0.5">في وقت الصلاة، يمكنك حجز مكانك مؤقتاً والذهاب لأداء الصلاة في المسجد بكل عُذر.</p>
+                    </div>
+                </div>
+
+                <div class="bg-gray-900/90 border border-gray-800 p-4 rounded-xl flex items-start gap-3 md:col-span-2">
+                    <i class="fa-solid fa-gamepad text-brand-blue text-lg mt-0.5"></i>
+                    <div>
+                        <h4 class="font-bold text-white text-xs md:text-sm">المحافظة على الماتريال</h4>
+                        <p class="text-gray-400 text-xs mt-0.5">يرجى الحفاظ على الأجهزة والتجهيزات، مع تحمل المسؤولية الكاملة في حال إتلاف أو انكسار أي شيء.</p>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- SECTION: Air Conditioning & Cameras (التكييف والمراقبة) -->
-    <section id="features" class="py-12 px-4 max-w-5xl mx-auto w-full border-t border-gray-800">
+    <!-- SECTION 2: Features -->
+    <section id="features" class="py-6 px-4 max-w-5xl mx-auto w-full">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <!-- Air Conditioning Box -->
-            <div class="bg-brand-card p-6 rounded-3xl border border-cyan-500/40 shadow-xl text-center hover:border-cyan-400 transition">
-                <div class="w-16 h-16 bg-cyan-950/80 border border-cyan-400 text-cyan-300 rounded-2xl mx-auto flex items-center justify-center text-3xl mb-4 shadow-lg">
-                    <i class="fa-solid fa-snowflake"></i>
+            <div class="bg-cyan-950/40 border border-cyan-500/40 p-6 rounded-3xl shadow-xl flex items-center gap-5">
+                <div class="w-16 h-16 bg-cyan-500/20 rounded-2xl flex items-center justify-center shrink-0">
+                    <i class="fa-solid fa-snowflake text-3xl text-cyan-400"></i>
                 </div>
-                <h3 class="text-xl font-black text-cyan-300 mb-2">قاعة مكيفة بالكامل</h3>
-                <p class="text-gray-300 text-xs md:text-sm leading-relaxed">
-                    استمتع بأجواء مريحة ومثالية للعب والتنافس طوال اليوم بفضل نظام التكييف المركزي المصمم لضمان أفضل تجربة لك ولأصدقائك.
-                </p>
+                <div>
+                    <h3 class="font-black text-cyan-300 text-lg mb-1">تكييف هواء كامل (Climatisé)</h3>
+                    <p class="text-gray-300 text-xs leading-relaxed">
+                        الصالة مجهزة بنظام تكييف هواء ممتاز لضمان أجواء مريحة ومنعشة لجميع اللاعبين طوال أوقات السنة صيفاً وشتاءً.
+                    </p>
+                </div>
             </div>
 
-            <!-- Security Cameras Box -->
-            <div class="bg-brand-card p-6 rounded-3xl border border-red-500/40 shadow-xl text-center hover:border-red-400 transition">
-                <div class="w-16 h-16 bg-red-950/80 border border-red-400 text-red-300 rounded-2xl mx-auto flex items-center justify-center text-3xl mb-4 shadow-lg">
-                    <i class="fa-solid fa-video"></i>
+            <div class="bg-red-950/40 border border-red-500/40 p-6 rounded-3xl shadow-xl flex items-center gap-5">
+                <div class="w-16 h-16 bg-red-500/20 rounded-2xl flex items-center justify-center shrink-0">
+                    <i class="fa-solid fa-video text-3xl text-red-400"></i>
                 </div>
-                <h3 class="text-xl font-black text-red-300 mb-2">كاميرات مراقبة 24/7</h3>
-                <p class="text-gray-300 text-xs md:text-sm leading-relaxed">
-                    بيئة آمنة ومحمية بفضل شبكة كاميرات المراقبة المتطورة التي تعمل على مدار 24 ساعة لحماية ممتلكاتكم وضمان الأمان للجميع.
-                </p>
+                <div>
+                    <h3 class="font-black text-red-300 text-lg mb-1">كاميرات مراقبة (داخلية وخارجية)</h3>
+                    <p class="text-gray-300 text-xs leading-relaxed">
+                        المتجر مراقب بالكاميرات باحترافية على مدار 24/7 (من الداخل والخارج) لضمان أمن وسلامة الزبائن وممتلكاتهم.
+                    </p>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- SECTION: Booking Form & Seat Selection -->
-    <section id="booking" class="py-12 px-4 max-w-5xl mx-auto w-full">
-        <div class="bg-brand-card p-6 md:p-8 rounded-3xl border border-brand-blue/30 shadow-2xl relative">
-            <h2 class="text-2xl md:text-3xl font-black text-brand-blue neon-text-blue mb-6 text-center">
-                <i class="fa-solid fa-calendar-check ml-2"></i>احجز جهازك الآن
-            </h2>
-
-            <!-- Step 1: Select Platform -->
-            <div class="mb-6">
-                <label class="block text-sm font-bold text-gray-300 mb-3">1. اختر نوع اللعبة أو الجهاز:</label>
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
-                    <button id="btn-pc" onclick="setPlatform('pc', 100)" class="platform-btn bg-gray-900 border border-gray-700 hover:border-brand-blue p-3 rounded-2xl font-bold text-xs transition flex flex-col items-center gap-2 group">
-                        <div class="w-full h-16 rounded-xl bg-gray-950 border border-gray-800 flex items-center justify-center p-1 overflow-hidden">
-                            <img src="https://raw.githubusercontent.com/nasromouhoub191-hub/a-m/main/PC.jpg" alt="CS 1.6 PC" class="max-h-full max-w-full object-contain group-hover:scale-105 transition duration-300">
-                        </div>
-                        <span>CS 1.6 (PC)</span>
-                    </button>
-                    <button id="btn-ps4-1" onclick="setPlatform('ps4-1v1', 50)" class="platform-btn bg-gray-900 border border-gray-700 hover:border-brand-orange p-3 rounded-2xl font-bold text-xs transition flex flex-col items-center gap-2 group">
-                        <div class="w-full h-16 rounded-xl bg-gray-950 border border-gray-800 flex items-center justify-center p-1 overflow-hidden">
-                            <img src="https://raw.githubusercontent.com/nasromouhoub191-hub/a-m/main/2ps4.png" alt="PS4 1v1" class="max-h-full max-w-full object-contain group-hover:scale-105 transition duration-300">
-                        </div>
-                        <span>PS4 (1v1)</span>
-                    </button>
-                    <button id="btn-ps4-2" onclick="setPlatform('ps4-2v2', 80)" class="platform-btn bg-gray-900 border border-gray-700 hover:border-brand-blue p-3 rounded-2xl font-bold text-xs transition flex flex-col items-center gap-2 group">
-                        <div class="w-full h-16 rounded-xl bg-gray-950 border border-gray-800 flex items-center justify-center p-1 overflow-hidden">
-                            <img src="https://raw.githubusercontent.com/nasromouhoub191-hub/a-m/main/4ps4m.png" alt="PS4 2v2" class="max-h-full max-w-full object-contain group-hover:scale-105 transition duration-300">
-                        </div>
-                        <span>PS4 (2v2 زوجي)</span>
-                    </button>
-                    <button id="btn-ps4-night" onclick="setPlatform('ps4-night', 600)" class="platform-btn bg-gray-900 border border-gray-700 hover:border-purple-500 p-3 rounded-2xl font-bold text-xs transition flex flex-col items-center gap-2 group">
-                        <div class="w-full h-16 rounded-xl bg-gray-950 border border-gray-800 flex items-center justify-center p-1 overflow-hidden">
-                            <img src="https://raw.githubusercontent.com/nasromouhoub191-hub/a-m/main/%D9%83%D8%B1%D8%A7%D8%A1%20%D9%84%D9%8A%D9%84%D8%A9%20.png" alt="كراء ليلة" class="max-h-full max-w-full object-contain group-hover:scale-105 transition duration-300">
-                        </div>
-                        <span>كراء PS4 ليلة</span>
-                    </button>
-                </div>
-            </div>
-
-            <!-- Step 2: Seat Selection Grid -->
-            <div id="seatsSelectionBlock" class="mb-6">
-                <label class="block text-sm font-bold text-gray-300 mb-3">2. اختر رقم الجهاز / الأجهزة:</label>
-                <div id="seatsGrid" class="grid grid-cols-3 sm:grid-cols-5 md:grid-cols-10 gap-2">
-                    <!-- Dynamic seats -->
-                </div>
-            </div>
-
-            <!-- Step 3: Duration / Quantity Selection -->
-            <div class="mb-6">
-                <label id="quantityLabel" class="block text-sm font-bold text-gray-300 mb-3">3. اختر الوقت (بالساعات والدقائق):</label>
-                
-                <!-- PC Time Slider -->
-                <div id="pcSliderContainer" class="bg-gray-900 p-4 rounded-2xl border border-gray-800 flex flex-col gap-2">
-                    <div class="flex justify-between items-center text-xs text-gray-400 font-bold">
-                        <span>30 دقيقة</span>
-                        <span id="timeDisplayBadge" class="text-brand-blue text-sm font-black bg-brand-blue/10 px-3 py-1 rounded-xl border border-brand-blue/30">1 ساعة</span>
-                        <span>5 ساعات</span>
-                    </div>
-                    <input type="range" id="timeSlider" min="30" max="300" step="15" value="60" oninput="calculateTotal()" class="w-full cursor-pointer">
-                </div>
-
-                <!-- Number Input (For Matches or Night Rentals) -->
-                <div id="numberInputContainer" class="hidden bg-gray-900 p-4 rounded-2xl border border-gray-800 flex items-center justify-between">
-                    <span class="text-xs text-gray-300 font-bold">العدد:</span>
-                    <input type="number" id="quantityInput" min="1" max="20" value="1" onchange="calculateTotal()" oninput="calculateTotal()" class="bg-brand-card border border-gray-700 rounded-xl px-3 py-2 text-sm text-center text-white font-bold w-24 outline-none focus:border-brand-blue">
-                </div>
-            </div>
-
-            <!-- Step 4: Customer Details -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                <div>
-                    <label class="block text-xs font-bold text-gray-400 mb-1">اسمك الكريم:</label>
-                    <input type="text" id="customerName" placeholder="أدخل اسمك" oninput="calculateTotal()" class="w-full bg-gray-900 border border-gray-700 rounded-xl p-3 text-xs text-white focus:border-brand-blue outline-none">
-                </div>
-                <div>
-                    <label class="block text-xs font-bold text-gray-400 mb-1">وقت الوصول المتوقع إلى الصالة:</label>
-                    <input type="time" id="arrivalTime" value="16:00" onchange="calculateTotal()" class="w-full bg-gray-900 border border-gray-700 rounded-xl p-3 text-xs text-white focus:border-brand-blue outline-none">
-                </div>
-            </div>
-
-            <!-- Booking Summary Box -->
-            <div class="bg-gray-900/90 border border-brand-blue/30 p-5 rounded-2xl mb-6">
-                <h3 class="text-sm font-bold text-brand-blue mb-3 border-b border-gray-800 pb-2">تفاصيل الحجز:</h3>
-                <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs">
-                    <div>
-                        <span class="text-gray-400 block">الاسم:</span>
-                        <strong id="summaryCustomer" class="text-white">زائر</strong>
-                    </div>
-                    <div>
-                        <span class="text-gray-400 block">الخدمة:</span>
-                        <strong id="summaryPlatform" class="text-white">CS 1.6 (PC)</strong>
-                    </div>
-                    <div>
-                        <span class="text-gray-400 block">الأجهزة المحجوزة:</span>
-                        <strong id="summarySeats" class="text-brand-blue">لم يتم الاختيار</strong>
-                    </div>
-                    <div>
-                        <span id="summaryQtyTitle" class="text-gray-400 block">المدة:</span>
-                        <strong id="summaryQty" class="text-white">1 ساعة</strong>
-                    </div>
-                    <div>
-                        <span class="text-gray-400 block">وقت الوصول:</span>
-                        <strong id="summaryArrival" class="text-white">16:00</strong>
-                    </div>
-                    <div>
-                        <span class="text-gray-400 block">السعر الإجمالي:</span>
-                        <strong id="summaryTotal" class="text-brand-orange text-base font-black">100 دج</strong>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Confirm / Send via WhatsApp Buttons -->
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                <button onclick="confirmAndSendWhatsApp('0559935670')" class="bg-green-600 hover:bg-green-500 text-white font-extrabold py-3 px-3 rounded-xl transition text-xs flex items-center justify-center gap-2 shadow-lg">
-                    <i class="fa-brands fa-whatsapp text-base"></i> إرسال إلى جاليـل
-                </button>
-                <button onclick="confirmAndSendWhatsApp('0556751958')" class="bg-green-700 hover:bg-green-600 text-white font-extrabold py-3 px-3 rounded-xl transition text-xs flex items-center justify-center gap-2 shadow-lg">
-                    <i class="fa-brands fa-whatsapp text-base"></i> إرسال إلى مهـدي
-                </button>
-                <button onclick="confirmAndSendWhatsApp('0782890923')" class="bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold py-3 px-3 rounded-xl transition text-xs flex items-center justify-center gap-2 shadow-lg">
-                    <i class="fa-brands fa-whatsapp text-base"></i> إرسال إلى علاء
-                </button>
-            </div>
+    <!-- Booking & Seat Selection -->
+    <section id="booking" class="py-16 px-4 max-w-6xl mx-auto w-full">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl font-black text-brand-blue neon-text-blue mb-2">حجز الأجهزة والمباريات أونلاين</h2>
+            <p class="text-gray-400">اختر نوع الخدمة، وقت الوصول المتوقع، والمقاعد واحجز فوراً عبر واتساب</p>
         </div>
-    </section>
 
-    <!-- SECTION: Admin Dashboard (A@M Admin) -->
-    <section id="adminSection" class="py-12 px-4 max-w-6xl mx-auto w-full border-t border-gray-800">
-        <div class="bg-brand-card p-6 md:p-8 rounded-3xl border border-brand-orange/40 shadow-2xl relative overflow-hidden">
-            
-            <!-- Admin Lock Overlay (Visible when locked) -->
-            <div id="adminLockOverlay" class="absolute inset-0 z-50 bg-black/95 backdrop-blur-md flex flex-col items-center justify-center p-6 text-center">
-                <div class="w-16 h-16 bg-brand-orange/20 border border-brand-orange text-brand-orange rounded-2xl flex items-center justify-center text-3xl mb-4 shadow-[0_0_20px_rgba(255,102,0,0.3)]">
-                    <i class="fa-solid fa-lock"></i>
-                </div>
-                <h3 class="text-2xl font-black text-white mb-2">لوحة الإدارة مقفولة</h3>
-                <p class="text-gray-400 text-xs mb-1 max-w-xs">يرجى إدخال رمز المرور للوصول إلى المداخيل والسجلات وإدارة الأجهزة</p>
-                <span class="text-brand-orange font-bold text-xs bg-brand-orange/10 px-3 py-1 rounded-full border border-brand-orange/30 mb-5">كلمة السر الافتراضية: 123456</span>
-                <div class="w-full max-w-xs flex flex-col gap-3">
-                    <input type="password" id="adminLockInput" placeholder="أدخل كلمة المرور (الافتراضية: 123456)" class="w-full bg-gray-900 border border-gray-700 rounded-xl p-3 text-center text-white text-sm focus:border-brand-orange outline-none font-bold">
-                    <button onclick="unlockAdminPanel()" class="w-full bg-brand-orange text-black font-extrabold py-3 rounded-xl hover:opacity-90 transition text-sm shadow-lg">
-                        فتح لوحة التحكم
-                    </button>
-                </div>
-            </div>
-
-            <!-- Header & Lock controls -->
-            <div class="flex flex-wrap items-center justify-between gap-4 mb-6 border-b border-gray-800 pb-4">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div class="lg:col-span-2 bg-brand-card p-6 rounded-2xl border border-gray-800 shadow-xl space-y-6">
                 <div>
-                    <h2 class="text-2xl md:text-3xl font-black text-brand-orange flex items-center gap-2">
-                        <i class="fa-solid fa-chart-line"></i> لوحة الإدارة والإحصائيات المالية (A@M Admin)
-                    </h2>
-                    <p class="text-gray-400 text-xs mt-1">متابعة المداخيل اليومية، الأسبوعية والشهرية وإدارة الحجوزات سحابياً</p>
+                    <label class="block font-bold text-sm mb-2 text-gray-300">1. اسمك الكريم (أو اسم المحجوز له):</label>
+                    <input type="text" id="customerName" placeholder="مثال: حسام وأصدقاؤه" class="w-full bg-gray-900 border border-gray-700 rounded-xl p-3 text-white font-bold focus:border-brand-blue focus:outline-none">
                 </div>
-                <div class="flex items-center gap-2">
-                    <button onclick="clearAdminLogs()" class="bg-red-900/50 hover:bg-red-800 text-red-300 border border-red-500/40 font-bold px-3 py-2 rounded-xl text-xs transition flex items-center gap-1.5">
-                        <i class="fa-solid fa-trash-can"></i> تفريغ السجل
-                    </button>
-                    <button onclick="lockAdminPanel()" class="bg-gray-800 hover:bg-gray-700 text-gray-300 font-bold px-3 py-2 rounded-xl text-xs transition flex items-center gap-1.5">
-                        <i class="fa-solid fa-lock"></i> قفل اللوحة
-                    </button>
+
+                <div>
+                    <label class="block font-bold text-sm mb-3 text-gray-300">2. اختر نوع الخدمة أو الجهاز:</label>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                        <button onclick="setPlatform('pc', 100)" id="btn-pc" class="p-3 rounded-xl border border-gray-700 bg-gray-900 font-bold hover:border-brand-blue transition text-center focus:outline-none overflow-hidden group">
+                            <div class="w-full h-16 rounded-lg overflow-hidden mb-2">
+                                <img src="https://raw.githubusercontent.com/nasromouhoub191-hub/a-m/main/PC.jpg" class="w-full h-full object-cover">
+                            </div>
+                            <span class="text-xs text-white">CS 1.6 (PC)</span>
+                        </button>
+                        <button onclick="setPlatform('ps4-1v1', 50)" id="btn-ps4-1" class="p-3 rounded-xl border border-gray-700 bg-gray-900 font-bold hover:border-brand-orange transition text-center focus:outline-none overflow-hidden group">
+                            <div class="w-full h-16 rounded-lg overflow-hidden mb-2">
+                                <img src="https://raw.githubusercontent.com/nasromouhoub191-hub/a-m/main/2ps4.png" class="w-full h-full object-cover">
+                            </div>
+                            <span class="text-xs text-white">PS4 (1v1)</span>
+                        </button>
+                        <button onclick="setPlatform('ps4-2v2', 80)" id="btn-ps4-2" class="p-3 rounded-xl border border-gray-700 bg-gray-900 font-bold hover:border-brand-blue transition text-center focus:outline-none overflow-hidden group">
+                            <div class="w-full h-16 rounded-lg overflow-hidden mb-2">
+                                <img src="https://raw.githubusercontent.com/nasromouhoub191-hub/a-m/main/4ps4m.png" class="w-full h-full object-cover">
+                            </div>
+                            <span class="text-xs text-white">PS4 (2v2)</span>
+                        </button>
+                        <button onclick="setPlatform('ps4-night', 600)" id="btn-ps4-night" class="p-3 rounded-xl border border-gray-700 bg-gray-900 font-bold hover:border-purple-500 transition text-center focus:outline-none overflow-hidden group">
+                            <div class="w-full h-16 rounded-lg overflow-hidden mb-2">
+                                <img src="https://raw.githubusercontent.com/nasromouhoub191-hub/a-m/main/%D9%83%D8%B1%D8%A7%D8%A1%20%D9%84%D9%8A%D9%84%D8%A9%20.png" class="w-full h-full object-cover">
+                            </div>
+                            <span class="text-xs text-white">كراء ليلة</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="flex justify-between items-center mb-2">
+                        <label id="quantityLabel" class="font-bold text-sm text-gray-300">3. اختر الوقت (بالساعات والدقائق):</label>
+                        <span id="timeDisplayBadge" class="bg-brand-blue/20 text-brand-blue border border-brand-blue/40 px-3 py-1 rounded-lg text-sm font-black">1 ساعة</span>
+                    </div>
+
+                    <div id="pcSliderContainer" class="bg-gray-900 p-4 rounded-xl border border-gray-800">
+                        <input type="range" id="timeSlider" min="15" max="300" step="15" value="60" oninput="calculateTotal()" class="w-full h-2 bg-gray-800 rounded-lg appearance-none cursor-pointer">
+                        <div class="flex justify-between text-xs text-gray-400 mt-2 font-bold">
+                            <span>15 دقيقة</span>
+                            <span>1 ساعة</span>
+                            <span>2 ساعتين</span>
+                            <span>3 ساعات</span>
+                            <span>5 ساعات</span>
+                        </div>
+                    </div>
+
+                    <div id="numberInputContainer" class="hidden">
+                        <input type="number" id="quantityInput" min="1" max="20" value="1" onchange="calculateTotal()" class="w-full bg-gray-900 border border-gray-700 rounded-xl p-3 text-white font-bold text-center focus:border-brand-blue focus:outline-none">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block font-bold text-sm mb-2 text-gray-300">4. الوقت المتوقع للحضور إلى الصالة:</label>
+                    <input type="time" id="arrivalTime" value="16:00" onchange="calculateTotal()" class="w-full bg-gray-900 border border-gray-700 rounded-xl p-3 text-white font-bold text-center focus:border-brand-orange focus:outline-none">
+                </div>
+
+                <div>
+                    <label class="block font-bold text-sm mb-2 text-gray-300">5. اختر الأجهزة المحددة بالضبط (Sélection):</label>
+                    <div id="seatsGrid" class="grid grid-cols-5 gap-3 p-4 bg-gray-900 rounded-xl border border-gray-800"></div>
                 </div>
             </div>
 
-            <!-- Password Change Bar -->
-            <div class="bg-gray-900/80 p-4 rounded-2xl border border-gray-800 mb-6 flex flex-wrap items-center justify-between gap-3">
-                <div class="flex items-center gap-2 text-xs font-bold text-gray-300">
-                    <i class="fa-solid fa-key text-brand-orange text-base"></i>
-                    <span>تغيير رمز مرور لوحة التحكم (الافتراضي: <strong>123456</strong>)</span>
+            <div class="bg-brand-card p-6 rounded-2xl border border-gray-800 shadow-xl flex flex-col justify-between">
+                <div>
+                    <h3 class="text-xl font-bold mb-4 text-brand-orange border-b border-gray-800 pb-3">ملخص الحجز</h3>
+                    <div class="space-y-3 text-sm">
+                        <div class="flex justify-between text-gray-400">
+                            <span>الزبون:</span>
+                            <span id="summaryCustomer" class="font-bold text-white">زائر</span>
+                        </div>
+                        <div class="flex justify-between text-gray-400">
+                            <span>الخدمة:</span>
+                            <span id="summaryPlatform" class="font-bold text-white">CS 1.6 (PC)</span>
+                        </div>
+                        <div class="flex justify-between text-gray-400">
+                            <span>الأجهزة المختارة:</span>
+                            <span id="summarySeats" class="font-bold text-brand-blue">لم يتم الاختيار</span>
+                        </div>
+                        <div class="flex justify-between text-gray-400">
+                            <span id="summaryQtyTitle">المدة:</span>
+                            <span id="summaryQty" class="font-bold text-white">1 ساعة</span>
+                        </div>
+                        <div class="flex justify-between text-gray-400">
+                            <span>ساعة الوصول:</span>
+                            <span id="summaryArrival" class="font-bold text-brand-orange">16:00</span>
+                        </div>
+                        <hr class="border-gray-800 my-2">
+                        <div class="flex justify-between text-lg font-black">
+                            <span>المبلغ الإجمالي:</span>
+                            <span id="summaryTotal" class="text-brand-orange">100 دج</span>
+                        </div>
+                    </div>
                 </div>
-                <div class="flex flex-wrap items-center gap-2 w-full md:w-auto">
-                    <input type="password" id="oldAdminPass" placeholder="كلمة المرور القديمة" class="bg-gray-900 border border-gray-700 rounded-xl px-3 py-1.5 text-xs text-white focus:border-brand-blue outline-none flex-1 md:w-36">
-                    <input type="password" id="newAdminPass" placeholder="كلمة المرور الجديدة" class="bg-gray-900 border border-gray-700 rounded-xl px-3 py-1.5 text-xs text-white focus:border-brand-blue outline-none flex-1 md:w-36">
-                    <button onclick="updateAdminPassword()" class="bg-brand-orange text-black font-extrabold px-4 py-1.5 rounded-xl text-xs hover:opacity-90 transition">
-                        تحديث الرمز
+
+                <div class="mt-8 space-y-3">
+                    <label class="block font-bold text-xs text-gray-400">إرسال الحجز التأكيدي عبر الواتساب إلى:</label>
+                    <button onclick="sendWhatsApp('0559935670')" class="w-full bg-green-600 hover:bg-green-500 text-white font-bold py-3 px-4 rounded-xl transition flex items-center justify-center gap-2 shadow-lg">
+                        <i class="fa-brands fa-whatsapp text-xl"></i> إرسال إلى جاليل (0559935670)
+                    </button>
+                    <button onclick="sendWhatsApp('0556751958')" class="w-full bg-gray-800 hover:bg-gray-700 text-white font-bold py-2.5 px-4 rounded-xl transition flex items-center justify-center gap-2 text-xs">
+                        <i class="fa-brands fa-whatsapp"></i> إرسال لمهدي (0556751958)
+                    </button>
+                    <button onclick="sendWhatsApp('0782890923')" class="w-full bg-gray-800 hover:bg-gray-700 text-white font-bold py-2.5 px-4 rounded-xl transition flex items-center justify-center gap-2 text-xs">
+                        <i class="fa-brands fa-whatsapp"></i> إرسال لعلاء (0782890923)
                     </button>
                 </div>
-            </div>
-
-            <!-- Financial Statistics Cards -->
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-                <div class="bg-gray-900 p-4 rounded-2xl border border-gray-800 text-center">
-                    <div class="text-xs text-gray-400 font-bold mb-1 flex items-center justify-center gap-1">
-                        <i class="fa-solid fa-calendar-day text-brand-blue"></i> مداخل اليوم
-                    </div>
-                    <div id="statToday" class="text-2xl font-black text-brand-blue">0 دج</div>
-                    <span id="statTodayCount" class="text-[10px] text-gray-500">0 حجوزات اليوم</span>
-                </div>
-
-                <div class="bg-gray-900 p-4 rounded-2xl border border-gray-800 text-center">
-                    <div class="text-xs text-gray-400 font-bold mb-1 flex items-center justify-center gap-1">
-                        <i class="fa-solid fa-calendar-week text-brand-orange"></i> مداخل الأسبوع (7 أيام)
-                    </div>
-                    <div id="statWeek" class="text-2xl font-black text-brand-orange">0 دج</div>
-                    <span class="text-[10px] text-gray-500">آخر 7 أيام</span>
-                </div>
-
-                <div class="bg-gray-900 p-4 rounded-2xl border border-gray-800 text-center">
-                    <div class="text-xs text-gray-400 font-bold mb-1 flex items-center justify-center gap-1">
-                        <i class="fa-solid fa-calendar-days text-purple-400"></i> مداخل الشهر (30 يوم)
-                    </div>
-                    <div id="statMonth" class="text-2xl font-black text-purple-400">0 دج</div>
-                    <span class="text-[10px] text-gray-500">الشهر الحالي</span>
-                </div>
-
-                <div class="bg-gray-900 p-4 rounded-2xl border border-gray-800 text-center">
-                    <div class="text-xs text-gray-400 font-bold mb-1 flex items-center justify-center gap-1">
-                        <i class="fa-solid fa-desktop text-green-400"></i> الأجهزة المشغولة حالياً
-                    </div>
-                    <div id="statActive" class="text-2xl font-black text-green-400">0 أجهزة</div>
-                    <span class="text-[10px] text-gray-500">نشط الآن</span>
-                </div>
-            </div>
-
-            <!-- Manual Quick Booking Bar -->
-            <div class="bg-gray-900 p-4 rounded-2xl border border-gray-800 mb-6">
-                <h3 class="text-sm font-bold text-brand-blue mb-3 flex items-center gap-1.5">
-                    <i class="fa-solid fa-plus-circle"></i> إضافة حجز يدوي سريع:
-                </h3>
-                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-6 gap-2">
-                    <input type="text" id="manualName" placeholder="اسم الزبون" class="bg-brand-card border border-gray-700 rounded-xl p-2 text-xs text-white focus:border-brand-blue outline-none">
-                    <select id="manualPlatform" class="bg-brand-card border border-gray-700 rounded-xl p-2 text-xs text-white focus:border-brand-blue outline-none">
-                        <option value="CS 1.6 (PC)">CS 1.6 (PC)</option>
-                        <option value="PS4 (1v1)">PS4 (1v1)</option>
-                        <option value="PS4 (2v2)">PS4 (2v2)</option>
-                        <option value="كراء PS4">كراء PS4</option>
-                    </select>
-                    <input type="text" id="manualSeats" placeholder="الأجهزة (مثال: PC #1)" class="bg-brand-card border border-gray-700 rounded-xl p-2 text-xs text-white focus:border-brand-blue outline-none">
-                    <input type="text" id="manualDuration" placeholder="المدة / المباريات" class="bg-brand-card border border-gray-700 rounded-xl p-2 text-xs text-white focus:border-brand-blue outline-none">
-                    <input type="number" id="manualAmount" placeholder="المبلغ (دج)" class="bg-brand-card border border-gray-700 rounded-xl p-2 text-xs text-white focus:border-brand-blue outline-none">
-                    <button onclick="addManualBooking()" class="bg-cyan-400 hover:bg-cyan-300 text-black font-extrabold p-2 rounded-xl text-xs transition shadow">
-                        إضافة الحجز
-                    </button>
-                </div>
-            </div>
-
-            <!-- Booking Records Table -->
-            <div class="overflow-x-auto">
-                <table class="w-full text-right text-xs">
-                    <thead class="bg-gray-900 text-gray-400 font-bold border-b border-gray-800">
-                        <tr>
-                            <th class="p-3">اسم الزبون</th>
-                            <th class="p-3">نوع الخدمة</th>
-                            <th class="p-3">الأجهزة المحجوزة</th>
-                            <th class="p-3">التاريخ والوقت</th>
-                            <th class="p-3">المدة / المباريات</th>
-                            <th class="p-3">المبلغ</th>
-                            <th class="p-3 text-center">إجراء (حذف)</th>
-                        </tr>
-                    </thead>
-                    <tbody id="adminBookingsTable" class="divide-y divide-gray-800/60">
-                        <!-- Bookings rendered dynamically -->
-                    </tbody>
-                </table>
             </div>
         </div>
     </section>
 
     <!-- Team & Direct Call Section -->
-    <section id="team" class="py-16 px-4 max-w-5xl mx-auto w-full border-t border-gray-800">
-        <div class="text-center mb-10">
-            <h2 class="text-3xl font-black text-brand-orange neon-text-orange mb-2">فريق العمل والاتصال المباشر</h2>
-            <p class="text-gray-400 text-sm">يمكنك الاتصال بِنَا مباشرة للاستفسارات والحجوزات</p>
+    <section id="team" class="py-16 px-4 max-w-5xl mx-auto w-full">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl font-black text-brand-orange neon-text-orange mb-2">الاتصال المباشر بالفريق</h2>
+            <p class="text-gray-400 mb-4">يمكنك الاتصال الفوري بنقرة واحدة أو التوجه لموقع الصالة مباشرة عبر GPS</p>
+            <a href="https://maps.app.goo.gl/4zKgwbyikg3E1dhXA" target="_blank" class="inline-flex items-center gap-2 bg-brand-orange/20 text-brand-orange border border-brand-orange/40 hover:bg-brand-orange hover:text-black font-bold px-5 py-2.5 rounded-xl transition text-sm">
+                <i class="fa-solid fa-map-location-dot"></i> فتح موقع الصالة الدقيق عبر GPS
+            </a>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <!-- Team Member 1 -->
-            <div class="bg-brand-card border border-gray-800 p-6 rounded-3xl text-center hover:border-brand-blue transition duration-300">
-                <div class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-brand-blue/10 border border-brand-blue/40 text-brand-blue flex items-center justify-center text-2xl shadow">
-                    <i class="fa-solid fa-headset"></i>
-                </div>
-                <h3 class="font-extrabold text-lg text-white">جاليل</h3>
-                <p class="text-xs text-brand-blue font-semibold mb-4">المشرف والقائم على الخدمة</p>
-                <a href="tel:0559935670" class="inline-flex items-center justify-center gap-2 bg-gray-900 border border-brand-blue/40 text-brand-blue hover:bg-brand-blue hover:text-black font-bold text-xs py-2.5 px-4 rounded-xl transition w-full">
-                    <i class="fa-solid fa-phone"></i>
-                    <span>0559935670</span>
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <div class="bg-brand-card p-6 rounded-2xl border border-gray-800 text-center relative overflow-hidden">
+                <div class="w-16 h-16 bg-gradient-to-tr from-brand-orange to-brand-blue rounded-full mx-auto flex items-center justify-center text-black font-black text-2xl mb-4">J</div>
+                <h3 class="font-bold text-xl mb-1">جاليل</h3>
+                <p class="text-xs text-brand-blue font-bold mb-4">المشرف والقائم على الخدمة</p>
+                <a href="tel:0559935670" class="block bg-gray-900 hover:bg-brand-blue hover:text-black text-brand-blue border border-brand-blue/40 font-bold py-2.5 px-4 rounded-xl transition text-xs">
+                    <i class="fa-solid fa-phone ml-1"></i> 0559935670
                 </a>
             </div>
 
-            <!-- Team Member 2 -->
-            <div class="bg-brand-card border border-gray-800 p-6 rounded-3xl text-center hover:border-brand-orange transition duration-300">
-                <div class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-brand-orange/10 border border-brand-orange/40 text-brand-orange flex items-center justify-center text-2xl shadow">
-                    <i class="fa-solid fa-user-shield"></i>
-                </div>
-                <h3 class="font-extrabold text-lg text-white">مهدي بورفيس</h3>
-                <p class="text-xs text-brand-orange font-semibold mb-4">مالك الصالة</p>
-                <a href="tel:0556751958" class="inline-flex items-center justify-center gap-2 bg-gray-900 border border-brand-orange/40 text-brand-orange hover:bg-brand-orange hover:text-black font-bold text-xs py-2.5 px-4 rounded-xl transition w-full">
-                    <i class="fa-solid fa-phone"></i>
-                    <span>0556751958</span>
+            <div class="bg-brand-card p-6 rounded-2xl border border-gray-800 text-center relative overflow-hidden">
+                <div class="w-16 h-16 bg-gradient-to-tr from-brand-blue to-purple-600 rounded-full mx-auto flex items-center justify-center text-black font-black text-2xl mb-4">M</div>
+                <h3 class="font-bold text-xl mb-1">مهدي بورفيس</h3>
+                <p class="text-xs text-brand-orange font-bold mb-4">المالك (Owner)</p>
+                <a href="tel:0556751958" class="block bg-gray-900 hover:bg-brand-orange hover:text-black text-brand-orange border border-brand-orange/40 font-bold py-2.5 px-4 rounded-xl transition text-xs">
+                    <i class="fa-solid fa-phone ml-1"></i> 0556751958
                 </a>
             </div>
 
-            <!-- Team Member 3 -->
-            <div class="bg-brand-card border border-gray-800 p-6 rounded-3xl text-center hover:border-brand-orange transition duration-300">
-                <div class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-brand-orange/10 border border-brand-orange/40 text-brand-orange flex items-center justify-center text-2xl shadow">
-                    <i class="fa-solid fa-user-shield"></i>
-                </div>
-                <h3 class="font-extrabold text-lg text-white">علاء بولمدن</h3>
-                <p class="text-xs text-brand-orange font-semibold mb-4">مالك الصالة</p>
-                <a href="tel:0782890923" class="inline-flex items-center justify-center gap-2 bg-gray-900 border border-brand-orange/40 text-brand-orange hover:bg-brand-orange hover:text-black font-bold text-xs py-2.5 px-4 rounded-xl transition w-full">
-                    <i class="fa-solid fa-phone"></i>
-                    <span>0782890923</span>
+            <div class="bg-brand-card p-6 rounded-2xl border border-gray-800 text-center relative overflow-hidden">
+                <div class="w-16 h-16 bg-gradient-to-tr from-brand-orange to-red-600 rounded-full mx-auto flex items-center justify-center text-black font-black text-2xl mb-4">A</div>
+                <h3 class="font-bold text-xl mb-1">علاء بولمدن</h3>
+                <p class="text-xs text-brand-orange font-bold mb-4">المالك (Owner)</p>
+                <a href="tel:0782890923" class="block bg-gray-900 hover:bg-brand-orange hover:text-black text-brand-orange border border-brand-orange/40 font-bold py-2.5 px-4 rounded-xl transition text-xs">
+                    <i class="fa-solid fa-phone ml-1"></i> 0782890923
                 </a>
             </div>
 
-            <!-- Developer Card -->
-            <div class="bg-brand-card border border-brand-blue/50 p-6 rounded-3xl text-center hover:border-brand-blue transition duration-300 shadow-[0_0_15px_rgba(0,240,255,0.15)]">
-                <div class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-brand-blue/20 border border-brand-blue text-brand-blue flex items-center justify-center text-2xl shadow">
-                    <i class="fa-solid fa-code"></i>
-                </div>
-                <h3 class="font-extrabold text-lg text-white">Nasro Mhb</h3>
-                <p class="text-xs text-brand-blue font-semibold mb-4">مطور وصانع التطبيق</p>
-                <a href="https://wa.me/213000000000" target="_blank" class="inline-flex items-center justify-center gap-2 bg-brand-blue text-black font-extrabold text-xs py-2.5 px-4 rounded-xl hover:opacity-90 transition w-full">
-                    <i class="fa-brands fa-whatsapp"></i>
-                    <span>تواصل مع المطور</span>
+            <div class="bg-brand-card p-6 rounded-2xl border border-brand-orange/40 text-center relative overflow-hidden shadow-lg">
+                <div class="w-16 h-16 bg-gradient-to-tr from-green-500 to-brand-blue rounded-full mx-auto flex items-center justify-center text-black font-black text-xl mb-4">N</div>
+                <h3 class="font-bold text-xl mb-1">Nasro Mhb</h3>
+                <p class="text-xs text-brand-blue font-bold mb-4">صانع التطبيق والمطور</p>
+                <a href="https://wa.me/213000000000" target="_blank" class="block bg-gray-900 hover:bg-green-600 hover:text-white text-green-400 border border-green-500/40 font-bold py-2.5 px-4 rounded-xl transition text-xs">
+                    <i class="fa-brands fa-whatsapp ml-1"></i> تواصل مع المطور
                 </a>
             </div>
         </div>
     </section>
 
-    <!-- Map & GPS Section -->
-    <section class="py-12 px-4 bg-brand-card/50 border-t border-gray-800">
-        <div class="max-w-5xl mx-auto text-center">
-            <h2 class="text-2xl md:text-3xl font-black text-brand-blue neon-text-blue mb-2">موقع الصالة على الخريطة (GPS)</h2>
-            <p class="text-gray-400 text-xs md:text-sm mb-6">القل، ولاية سكيكدة - نسعد بزيارتكم في أي وقت!</p>
+    <!-- Admin Section with Cloud-Synced PIN -->
+    <section class="py-10 bg-gray-950 border-t border-gray-900">
+        <div class="max-w-7xl mx-auto px-4 text-center">
             
-            <div class="bg-brand-card p-2 rounded-3xl border border-gray-800 overflow-hidden shadow-2xl relative h-72 md:h-96">
-                <iframe 
-                    src="https://maps.google.com/maps?q=37.0069,6.5611&hl=ar&z=15&output=embed" 
-                    width="100%" 
-                    height="100%" 
-                    style="border:0;" 
-                    allowfullscreen="" 
-                    loading="lazy"
-                    referrerpolicy="no-referrer-when-downgrade"
-                    class="rounded-2xl grayscale brightness-90 contrast-125 hover:grayscale-0 transition duration-500">
-                </iframe>
+            <button id="adminLoginBtn" onclick="unlockAdmin()" class="bg-gray-900 border border-gray-800 hover:border-brand-blue text-gray-400 font-bold py-2.5 px-6 rounded-xl text-xs transition inline-flex items-center gap-2 shadow-lg">
+                <i class="fa-solid fa-user-shield text-brand-orange"></i> دخول العمال والمالكين (لوحة التحكم الإدارية) - الرمز الافتراضي: 123456
+            </button>
+
+            <!-- Admin Panel (Initially Hidden) -->
+            <div id="adminPanel" class="hidden text-right bg-brand-card p-6 rounded-2xl border border-gray-800 shadow-2xl mt-4">
+                
+                <div class="flex flex-col md:flex-row justify-between items-center mb-6 border-b border-gray-800 pb-4 gap-4">
+                    <div>
+                        <h3 class="text-2xl font-black text-brand-orange flex items-center gap-2">
+                            <i class="fa-solid fa-chart-line"></i> لوحة الإدارة والإحصائيات المالية (A@M Admin)
+                        </h3>
+                        <p class="text-xs text-gray-400 mt-1">متابعة المداخيل اليومية، الأسبوعية والشهرية وإدارة الحجوزات سحابياً (متزامن بين كل الأجهزة)</p>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <button onclick="clearAllBookings()" class="bg-red-900/30 hover:bg-red-900/60 text-red-400 border border-red-800 text-xs px-3 py-2 rounded-xl transition font-bold">
+                            <i class="fa-solid fa-trash-can ml-1"></i> تفريغ السجل
+                        </button>
+                        <button onclick="lockAdmin()" class="bg-gray-800 hover:bg-gray-700 text-gray-300 text-xs px-4 py-2 rounded-xl border border-gray-700 font-bold">
+                            قفل اللوحة <i class="fa-solid fa-lock mr-1"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Change Password Box -->
+                <div class="bg-gray-900 p-4 rounded-xl border border-gray-800 mb-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-key text-brand-orange text-lg"></i>
+                        <div>
+                            <h4 class="font-bold text-sm text-white">تغيير رمز مرور لوحة التحكم (متزامن سحابياً)</h4>
+                            <p class="text-[11px] text-gray-400">الرمز الحالي متزامن بين جميع الهواتف (الافتراضي: 123456)</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2 w-full sm:w-auto">
+                        <input type="password" id="oldPinInput" placeholder="كلمة المرور القديمة" class="bg-gray-800 border border-gray-700 text-xs text-white p-2.5 rounded-lg focus:outline-none">
+                        <input type="password" id="newPinInput" placeholder="كلمة المرور الجديدة" class="bg-gray-800 border border-gray-700 text-xs text-white p-2.5 rounded-lg focus:outline-none">
+                        <button onclick="changeAdminPassword()" class="bg-brand-orange hover:bg-orange-600 text-black font-extrabold text-xs px-4 py-2.5 rounded-lg transition whitespace-nowrap">
+                            تحديث الرمز
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Financial Analytics Cards -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                    <div class="bg-gray-900 p-4 rounded-xl border border-gray-800">
+                        <span class="text-xs text-gray-400 block font-bold mb-1"><i class="fa-solid fa-calendar-day text-brand-blue ml-1"></i> مداخيل اليوم</span>
+                        <span id="statDaily" class="text-2xl font-black text-brand-blue">0 دج</span>
+                    </div>
+                    <div class="bg-gray-900 p-4 rounded-xl border border-gray-800">
+                        <span class="text-xs text-gray-400 block font-bold mb-1"><i class="fa-solid fa-calendar-week text-brand-orange ml-1"></i> مداخيل الأسبوع (7 أيام)</span>
+                        <span id="statWeekly" class="text-2xl font-black text-brand-orange">0 دج</span>
+                    </div>
+                    <div class="bg-gray-900 p-4 rounded-xl border border-gray-800">
+                        <span class="text-xs text-gray-400 block font-bold mb-1"><i class="fa-solid fa-calendar text-purple-400 ml-1"></i> مداخيل الشهر (30 يوم)</span>
+                        <span id="statMonthly" class="text-2xl font-black text-purple-400">0 دج</span>
+                    </div>
+                    <div class="bg-gray-900 p-4 rounded-xl border border-gray-800">
+                        <span class="text-xs text-gray-400 block font-bold mb-1"><i class="fa-solid fa-desktop text-green-400 ml-1"></i> الأجهزة المشغولة حالياً</span>
+                        <span id="statActiveSeats" class="text-2xl font-black text-green-400">0 أجهزة</span>
+                    </div>
+                </div>
+
+                <!-- Manual Booking Insertion -->
+                <div class="bg-gray-900 p-4 rounded-xl border border-gray-800 mb-6">
+                    <h4 class="font-bold text-sm text-brand-blue mb-3"><i class="fa-solid fa-plus-circle ml-1"></i> إضافة حجز يدوي سريع:</h4>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-3">
+                        <input type="text" id="manualName" placeholder="اسم الزبون" class="bg-gray-800 border border-gray-700 text-xs text-white p-2.5 rounded-lg focus:outline-none">
+                        <select id="manualPlatform" class="bg-gray-800 border border-gray-700 text-xs text-white p-2.5 rounded-lg focus:outline-none">
+                            <option value="CS 1.6 (PC)">CS 1.6 (PC)</option>
+                            <option value="PS4 (1v1)">PS4 (1v1)</option>
+                            <option value="PS4 (2v2)">PS4 (2v2)</option>
+                            <option value="كراء ليلة">كراء ليلة</option>
+                        </select>
+                        <input type="text" id="manualSeats" placeholder="الأجهزة (مثل: PC #1)" class="bg-gray-800 border border-gray-700 text-xs text-white p-2.5 rounded-lg focus:outline-none">
+                        <input type="text" id="manualDuration" placeholder="المدة / المباريات" class="bg-gray-800 border border-gray-700 text-xs text-white p-2.5 rounded-lg focus:outline-none">
+                        <input type="number" id="manualPrice" placeholder="المبلغ (دج)" class="bg-gray-800 border border-gray-700 text-xs text-white p-2.5 rounded-lg focus:outline-none">
+                    </div>
+                    <button onclick="addManualBooking()" class="mt-3 w-full bg-gradient-to-r from-brand-blue to-blue-600 text-black font-extrabold py-2.5 rounded-lg text-xs hover:opacity-90 transition shadow-lg">
+                        إضافة الحجز إلى السجل السحابي وتحديث العدادات
+                    </button>
+                </div>
+
+                <!-- Bookings Table -->
+                <div class="overflow-x-auto">
+                    <table class="w-full text-right text-xs text-gray-300">
+                        <thead class="bg-gray-900 text-gray-400 uppercase border-b border-gray-800">
+                            <tr>
+                                <th class="p-3">اسم الزبون</th>
+                                <th class="p-3">نوع الخدمة</th>
+                                <th class="p-3">الأجهزة المحجوزة</th>
+                                <th class="p-3">التاريخ والوقت</th>
+                                <th class="p-3">المدة / المباريات</th>
+                                <th class="p-3">المبلغ</th>
+                                <th class="p-3 text-center">إجراء (حذف)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="adminBookingsTable">
+                            <tr>
+                                <td colspan="7" class="p-4 text-center text-gray-500">جاري مزامنة السجل من السحابة...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
             </div>
         </div>
     </section>
 
     <!-- Footer -->
     <footer class="bg-brand-dark border-t border-gray-800 py-6 text-center text-xs text-gray-500">
-        <p>© 2026 A@M Game Lounge - القل، سكيكدة. جميع الحقوق محفوظة | صانع التطبيق: <span class="text-brand-blue font-bold">Nasro Mhb</span></p>
+        <p class="font-bold text-gray-400 mb-1">A@M Game Collo © 2026 - جميع الحقوق محفوظة</p>
+        <p>تصميم وتطوير: <span class="text-brand-blue font-bold">Nasro Mhb</span></p>
     </footer>
 
+    <!-- Firebase SDK initialization & Logic -->
     <script>
-        // --- Firebase Firestore Initialization ---
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'am-game-app';
-        let db = null;
-        let auth = null;
-        let currentUser = null;
+        // Firebase configuration initialized for project am-game-collo
+        const firebaseConfig = {
+            apiKey: "AIzaSyD-placeholder-am-game",
+            authDomain: "am-game-collo.firebaseapp.com",
+            projectId: "am-game-collo",
+            storageBucket: "am-game-collo.appspot.com",
+            messagingSenderId: "123456789",
+            appId: "1:123456789:web:abcdef"
+        };
 
-        // Default local admin pass as fallback
-        let currentAdminPassword = localStorage.getItem('aMAdminPass') || '123456';
-        let adminBookings = JSON.parse(localStorage.getItem('aMAdminBookings') || '[]');
-
-        // Firebase Fallback / Initializer
-        if (typeof __firebase_config !== 'undefined') {
-            try {
-                const firebaseConfig = JSON.parse(__firebase_config);
-                const app = firebase.initializeApp(firebaseConfig);
-                db = firebase.firestore();
-                auth = firebase.auth();
-                
-                // Anonymous auth for secure Firestore queries
-                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                    auth.signInWithCustomToken(__initial_auth_token).then(res => {
-                        currentUser = res.user;
-                        initFirestoreListeners();
-                    }).catch(() => {
-                        auth.signInAnonymously().then(res => {
-                            currentUser = res.user;
-                            initFirestoreListeners();
-                        });
-                    });
-                } else {
-                    auth.signInAnonymously().then(res => {
-                        currentUser = res.user;
-                        initFirestoreListeners();
-                    });
-                }
-            } catch(e) {
-                console.error("Firebase init fallback error:", e);
+        let db;
+        try {
+            if (!firebase.apps.length) {
+                firebase.initializeApp(firebaseConfig);
             }
+            db = firebase.firestore();
+        } catch (e) {
+            console.error("Firebase Init Error:", e);
         }
 
         let currentPlatform = 'pc';
-        let currentPrice = 100;
+        let currentRate = 100;
         let selectedSeats = [];
-        let bookedSeatsList = [];
+        let deferredPrompt = null;
 
-        function showToast(msg, isError = false) {
-            const toast = document.getElementById('toastNotification');
-            const toastMsg = document.getElementById('toastMessage');
-            const toastIcon = document.getElementById('toastIcon');
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+        });
 
-            toastMsg.innerText = msg;
-            if(isError) {
-                toast.classList.remove('border-brand-blue/50');
-                toast.classList.add('border-red-500/50');
-                toastIcon.className = 'fa-solid fa-circle-xmark text-red-500 text-lg';
+        function triggerInstall() {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    deferredPrompt = null;
+                });
             } else {
-                toast.classList.remove('border-red-500/50');
-                toast.classList.add('border-brand-blue/50');
-                toastIcon.className = 'fa-solid fa-circle-check text-brand-blue text-lg';
+                alert('التطبيق مثبت مسبقاً أو أن المتصفح لا يدعم التثبيت المباشر. يمكنك تثبيته من إعدادات المتصفح (Add to Home Screen).');
             }
-
-            toast.classList.remove('hidden');
-            setTimeout(() => {
-                toast.classList.add('hidden');
-            }, 3500);
         }
 
         function closeWelcomeModal() {
@@ -704,262 +646,35 @@
             }, 300);
         }
 
-        function triggerInstall() {
-            showToast('انقر على خيارات المتصفح ثم "إضافة إلى الشاشة الرئيسية"');
-        }
-
-        // --- Realtime Cloud Synchronization ---
-        function initFirestoreListeners() {
-            if(!db) return;
-
-            // 1. Listen for Realtime Bookings across all devices
-            const bookingsCol = db.collection('artifacts').doc(appId).collection('public').doc('data').collection('bookings');
-            bookingsCol.onSnapshot((snapshot) => {
-                let cloudBookings = [];
-                let newBookedSeats = [];
-
-                snapshot.forEach(doc => {
-                    const data = doc.data();
-                    cloudBookings.push({ id: doc.id, ...data });
-                    
-                    // Collect active seats
-                    if (data.seats && Array.isArray(data.seats)) {
-                        newBookedSeats.push(...data.seats);
-                    } else if (data.seats && typeof data.seats === 'string') {
-                        data.seats.split(',').forEach(s => newBookedSeats.push(s.trim()));
-                    }
-                });
-
-                adminBookings = cloudBookings;
-                localStorage.setItem('aMAdminBookings', JSON.stringify(adminBookings));
-                bookedSeatsList = newBookedSeats;
-
-                renderAdminTable();
-                renderSeats();
-            }, (err) => {
-                console.error("Bookings sync error:", err);
-            });
-
-            // 2. Listen for Admin Password across all devices
-            const settingsDoc = db.collection('artifacts').doc(appId).collection('public').doc('data').collection('settings').doc('admin_config');
-            settingsDoc.onSnapshot((doc) => {
-                if (doc.exists && doc.data().password) {
-                    currentAdminPassword = doc.data().password;
-                    localStorage.setItem('aMAdminPass', currentAdminPassword);
-                }
-            }, (err) => {
-                console.error("Settings sync error:", err);
-            });
-        }
-
-        function lockAdminPanel() {
-            document.getElementById('adminLockOverlay').style.display = 'flex';
-            document.getElementById('adminLockInput').value = '';
-            showToast('تم قفل اللوحة بنجاح');
-        }
-
-        function unlockAdminPanel() {
-            const inputPass = document.getElementById('adminLockInput').value;
-            if(inputPass === currentAdminPassword) {
-                document.getElementById('adminLockOverlay').style.display = 'none';
-                showToast('تم فتح لوحة التحكم بنجاح');
-            } else {
-                showToast('كلمة المرور غير صحيحة!', true);
-            }
-        }
-
-        async function updateAdminPassword() {
-            const oldPass = document.getElementById('oldAdminPass').value;
-            const newPass = document.getElementById('newAdminPass').value;
-
-            if(oldPass !== currentAdminPassword) {
-                showToast('كلمة المرور القديمة غير صحيحة!', true);
-                return;
-            }
-
-            if(newPass && newPass.length >= 4) {
-                currentAdminPassword = newPass;
-                localStorage.setItem('aMAdminPass', newPass);
-
-                // Sync password to Cloud Firestore for all devices
-                if (db) {
-                    try {
-                        await db.collection('artifacts').doc(appId).collection('public').doc('data').collection('settings').doc('admin_config').set({
-                            password: newPass,
-                            updatedAt: new Date().toISOString()
-                        }, { merge: true });
-                        showToast('تم تحديث كلمة المرور ومزامنتها على جميع الأجهزة!');
-                    } catch(e) {
-                        console.error("Error updating password in cloud:", e);
-                        showToast('تم التحديث محلياً تعذر الاتصال بالسحاب', true);
-                    }
-                } else {
-                    showToast('تم تحديث كلمة المرور بنجاح (محلياً)');
-                }
-
-                document.getElementById('oldAdminPass').value = '';
-                document.getElementById('newAdminPass').value = '';
-            } else {
-                showToast('يرجى كتابة رمز مرور جديد من 4 أرقام على الأقل', true);
-            }
-        }
-
-        function renderAdminTable() {
-            const tbody = document.getElementById('adminBookingsTable');
-            if(!tbody) return;
-            tbody.innerHTML = '';
-
-            let todaySum = 0;
-            let todayCount = 0;
-            let totalSum = 0;
-
-            const now = new Date().toLocaleDateString('ar-DZ');
-
-            adminBookings.forEach((b, index) => {
-                totalSum += parseInt(b.amount || 0);
-                if(b.date === now) {
-                    todaySum += parseInt(b.amount || 0);
-                    todayCount++;
-                }
-
-                const seatsText = Array.isArray(b.seats) ? b.seats.join(', ') : (b.seats || 'غير محدد');
-
-                const tr = document.createElement('tr');
-                tr.className = 'hover:bg-gray-900/50 transition';
-                tr.innerHTML = `
-                    <td class="p-3 font-bold text-white">${b.name || 'زبون'}</td>
-                    <td class="p-3 text-gray-300">${b.platform || ''}</td>
-                    <td class="p-3 text-brand-blue">${seatsText}</td>
-                    <td class="p-3 text-gray-400">${b.date || ''} ${b.time || ''}</td>
-                    <td class="p-3 text-gray-300">${b.duration || b.qty || '1'}</td>
-                    <td class="p-3 font-black text-brand-orange">${b.amount || 0} دج</td>
-                    <td class="p-3 text-center">
-                        <button onclick="deleteBooking('${b.id || ''}', ${index})" class="text-red-400 hover:text-red-300 p-1">
-                            <i class="fa-solid fa-trash"></i>
-                        </button>
-                    </td>
-                `;
-                tbody.appendChild(tr);
-            });
-
-            document.getElementById('statToday').innerText = `${todaySum} دج`;
-            document.getElementById('statTodayCount').innerText = `${todayCount} حجوزات اليوم`;
-            document.getElementById('statWeek').innerText = `${totalSum} دج`;
-            document.getElementById('statMonth').innerText = `${totalSum} دج`;
-            document.getElementById('statActive').innerText = `${bookedSeatsList.length} أجهزة`;
-        }
-
-        async function addManualBooking() {
-            const name = document.getElementById('manualName').value.trim() || 'زبون';
-            const platform = document.getElementById('manualPlatform').value;
-            const seatsStr = document.getElementById('manualSeats').value.trim() || 'غير محدد';
-            const duration = document.getElementById('manualDuration').value.trim() || '1';
-            const amount = parseInt(document.getElementById('manualAmount').value) || 0;
-
-            const newBooking = {
-                name,
-                platform,
-                seats: seatsStr.split(','),
-                duration,
-                amount,
-                date: new Date().toLocaleDateString('ar-DZ'),
-                time: new Date().toLocaleTimeString('ar-DZ', { hour: '2-digit', minute: '2-digit' }),
-                createdAt: new Date().toISOString()
-            };
-
-            if (db) {
-                try {
-                    await db.collection('artifacts').doc(appId).collection('public').doc('data').collection('bookings').add(newBooking);
-                    showToast('تمت إضافة الحجز ومزامنة البيانات سحابياً فوراً');
-                } catch(e) {
-                    console.error("Error adding doc: ", e);
-                    adminBookings.unshift(newBooking);
-                    localStorage.setItem('aMAdminBookings', JSON.stringify(adminBookings));
-                    renderAdminTable();
-                }
-            } else {
-                adminBookings.unshift(newBooking);
-                localStorage.setItem('aMAdminBookings', JSON.stringify(adminBookings));
-                renderAdminTable();
-            }
-
-            document.getElementById('manualName').value = '';
-            document.getElementById('manualSeats').value = '';
-            document.getElementById('manualDuration').value = '';
-            document.getElementById('manualAmount').value = '';
-        }
-
-        async function deleteBooking(docId, index) {
-            if (db && docId) {
-                try {
-                    await db.collection('artifacts').doc(appId).collection('public').doc('data').collection('bookings').doc(docId).delete();
-                    showToast('تم حذف الحجز سحابياً من كل الأجهزة');
-                } catch(e) {
-                    console.error("Delete error:", e);
-                }
-            } else {
-                adminBookings.splice(index, 1);
-                localStorage.setItem('aMAdminBookings', JSON.stringify(adminBookings));
-                renderAdminTable();
-                showToast('تم حذف الحجز محلياً');
-            }
-        }
-
-        async function clearAdminLogs() {
-            if(db) {
-                try {
-                    const snapshot = await db.collection('artifacts').doc(appId).collection('public').doc('data').collection('bookings').get();
-                    const batch = db.batch();
-                    snapshot.forEach(doc => batch.delete(doc.ref));
-                    await batch.commit();
-                    showToast('تم مسح كافة السجلات السحابية بنجاح');
-                } catch(e) {
-                    console.error(e);
-                }
-            }
-            adminBookings = [];
-            localStorage.setItem('aMAdminBookings', JSON.stringify(adminBookings));
-            renderAdminTable();
-        }
-
-        function setPlatform(platform, price) {
+        function setPlatform(platform, rate) {
             currentPlatform = platform;
-            currentPrice = price;
+            currentRate = rate;
             selectedSeats = [];
 
-            // Reset buttons style
-            document.querySelectorAll('.platform-btn').forEach(btn => {
-                btn.classList.remove('platform-btn-active-blue', 'platform-btn-active-orange');
+            ['pc', 'ps4-1', 'ps4-2', 'ps4-night'].forEach(id => {
+                const btn = document.getElementById('btn-' + id);
+                if(btn) btn.classList.remove('border-brand-blue', 'border-brand-orange', 'border-purple-500', 'neon-border-blue', 'neon-border-orange');
             });
+
+            const activeBtnId = platform === 'pc' ? 'btn-pc' : platform === 'ps4-1v1' ? 'btn-ps4-1' : platform === 'ps4-2v2' ? 'btn-ps4-2' : 'btn-ps4-night';
+            const activeBtn = document.getElementById(activeBtnId);
+            if(activeBtn) activeBtn.classList.add('border-brand-blue', 'neon-border-blue');
 
             const pcSliderContainer = document.getElementById('pcSliderContainer');
             const numberInputContainer = document.getElementById('numberInputContainer');
-            const seatsSelectionBlock = document.getElementById('seatsSelectionBlock');
+            const quantityLabel = document.getElementById('quantityLabel');
+            const summaryQtyTitle = document.getElementById('summaryQtyTitle');
 
-            if(platform === 'pc') {
-                document.getElementById('btn-pc').classList.add('platform-btn-active-blue');
-                document.getElementById('quantityLabel').innerText = '3. اختر الوقت (بالساعات والدقائق):';
-                document.getElementById('summaryQtyTitle').innerText = 'المدة:';
+            if (platform === 'pc') {
                 pcSliderContainer.classList.remove('hidden');
                 numberInputContainer.classList.add('hidden');
-                seatsSelectionBlock.style.display = 'block';
-            } else if(platform === 'ps4-1v1' || platform === 'ps4-2v2') {
-                const activeBtn = platform === 'ps4-1v1' ? 'btn-ps4-1' : 'btn-ps4-2';
-                const activeClass = platform === 'ps4-1v1' ? 'platform-btn-active-orange' : 'platform-btn-active-blue';
-                document.getElementById(activeBtn).classList.add(activeClass);
-                
-                document.getElementById('quantityLabel').innerText = '3. اختر عدد المباريات:';
-                document.getElementById('summaryQtyTitle').innerText = 'المباريات:';
+                quantityLabel.innerText = "3. اختر الوقت (بالساعات والدقائق):";
+                summaryQtyTitle.innerText = "المدة:";
+            } else {
                 pcSliderContainer.classList.add('hidden');
                 numberInputContainer.classList.remove('hidden');
-                seatsSelectionBlock.style.display = 'block';
-            } else if(platform === 'ps4-night') {
-                document.getElementById('btn-ps4-night').classList.add('platform-btn-active-orange');
-                document.getElementById('quantityLabel').innerText = '3. اختر عدد الليالي:';
-                document.getElementById('summaryQtyTitle').innerText = 'عدد الليالي:';
-                pcSliderContainer.classList.add('hidden');
-                numberInputContainer.classList.remove('hidden');
-                seatsSelectionBlock.style.display = 'none';
+                quantityLabel.innerText = "3. اختر عدد المباريات:";
+                summaryQtyTitle.innerText = "عدد المباريات:";
             }
 
             renderSeats();
@@ -970,138 +685,291 @@
             const grid = document.getElementById('seatsGrid');
             if(!grid) return;
             grid.innerHTML = '';
-            const count = currentPlatform === 'pc' ? 10 : 6;
-            const prefix = currentPlatform === 'pc' ? 'PC #' : 'PS4 #';
+            let totalSeats = currentPlatform === 'pc' ? 10 : 6;
+            let prefix = currentPlatform === 'pc' ? 'PC #' : 'PS4 #' ;
 
-            for (let i = 1; i <= count; i++) {
-                const seatName = `${prefix}${i}`;
-                const isBooked = bookedSeatsList.includes(seatName);
+            for (let i = 1; i <= totalSeats; i++) {
+                const seatName = prefix + i;
+                const isSelected = selectedSeats.includes(seatName);
+                const isOccupied = window.occupiedSeatsCache && window.occupiedSeatsCache.includes(seatName);
 
                 const btn = document.createElement('button');
-                btn.className = 'seat-btn p-2.5 rounded-xl text-xs font-bold border border-gray-700 bg-gray-900 hover:border-brand-blue transition text-center';
-                btn.innerText = isBooked ? `${seatName} (محجوز)` : seatName;
+                btn.type = 'button';
+                btn.className = `p-2.5 rounded-xl border text-xs font-bold transition flex flex-col items-center justify-center gap-1 ${
+                    isOccupied ? 'bg-red-950/60 border-red-500 text-red-400 cursor-not-allowed opacity-60' :
+                    isSelected ? 'bg-brand-blue text-black border-brand-blue shadow-[0_0_10px_#00f0ff]' : 
+                    'bg-gray-800 border-gray-700 hover:border-brand-blue text-white'
+                }`;
+                btn.innerHTML = `<i class="fa-solid ${currentPlatform === 'pc' ? 'fa-desktop' : 'fa-gamepad'} text-sm"></i><span>${seatName}</span>`;
                 
-                if (isBooked) {
-                    btn.classList.add('booked');
-                    btn.disabled = true;
-                } else if (selectedSeats.includes(seatName)) {
-                    btn.classList.add('selected');
-                }
-
-                if(!isBooked) {
-                    btn.onclick = () => toggleSeat(seatName, btn);
+                if (!isOccupied) {
+                    btn.onclick = () => toggleSeat(seatName);
+                } else {
+                    btn.title = "هذا الجهاز محجوز حالياً";
                 }
                 grid.appendChild(btn);
             }
         }
 
-        function toggleSeat(seatName, btnElement) {
-            if (selectedSeats.includes(seatName)) {
-                selectedSeats = selectedSeats.filter(s => s !== seatName);
-                btnElement.classList.remove('selected');
+        function toggleSeat(seatName) {
+            const index = selectedSeats.indexOf(seatName);
+            if (index > -1) {
+                selectedSeats.splice(index, 1);
             } else {
-                selectedSeats.push(seatName);
-                btnElement.classList.add('selected');
+                if (currentPlatform === 'ps4-1v1' || currentPlatform === 'ps4-2v2') {
+                    selectedSeats = [seatName]; // اختيار جهاز واحد للـ PS4
+                } else {
+                    selectedSeats.push(seatName);
+                }
             }
+            renderSeats();
             calculateTotal();
         }
 
         function calculateTotal() {
-            const customerName = document.getElementById('customerName').value.trim() || 'زائر';
-            const arrivalTime = document.getElementById('arrivalTime').value || '16:00';
-            
+            const customerName = document.getElementById('customerName').value || 'زائر';
             document.getElementById('summaryCustomer').innerText = customerName;
-            document.getElementById('summaryArrival').innerText = arrivalTime;
+
+            let platformName = currentPlatform === 'pc' ? 'CS 1.6 (PC)' : currentPlatform === 'ps4-1v1' ? 'PS4 (1v1)' : currentPlatform === 'ps4-2v2' ? 'PS4 (2v2)' : 'كراء ليلة PS4';
+            document.getElementById('summaryPlatform').innerText = platformName;
+
+            document.getElementById('summarySeats').innerText = selectedSeats.length > 0 ? selectedSeats.join(', ') : 'لم يتم الاختيار';
+            document.getElementById('summaryArrival').innerText = document.getElementById('arrivalTime').value;
 
             let total = 0;
-            let qtyDisplay = '';
+            let qtyText = '';
 
             if (currentPlatform === 'pc') {
-                const minutes = parseInt(document.getElementById('timeSlider').value);
-                const hours = Math.floor(minutes / 60);
-                const mins = minutes % 60;
+                const mins = parseInt(document.getElementById('timeSlider').value);
+                const hours = mins / 60;
+                total = Math.round(hours * currentRate * (selectedSeats.length > 0 ? selectedSeats.length : 1));
                 
-                if (hours > 0 && mins > 0) qtyDisplay = `${hours} ساعة و ${mins} دقيقة`;
-                else if (hours > 0) qtyDisplay = `${hours} ساعة`;
-                else qtyDisplay = `${mins} دقيقة`;
-
-                const ratePerMin = currentPrice / 60;
-                total = Math.round(minutes * ratePerMin * (selectedSeats.length || 1));
-                
-                document.getElementById('timeDisplayBadge').innerText = qtyDisplay;
-                document.getElementById('summaryPlatform').innerText = 'CS 1.6 (PC)';
+                let h = Math.floor(mins / 60);
+                let m = mins % 60;
+                qtyText = (h > 0 ? h + ' ساعة ' : '') + (m > 0 ? m + ' دقيقة' : '');
+                document.getElementById('timeDisplayBadge').innerText = qtyText;
+            } else if (currentPlatform === 'ps4-night') {
+                total = currentRate;
+                qtyText = 'ليلة كاملة';
             } else {
                 const qty = parseInt(document.getElementById('quantityInput').value) || 1;
-                total = qty * currentPrice * (selectedSeats.length || 1);
-
-                if (currentPlatform === 'ps4-1v1') {
-                    qtyDisplay = `${qty} مباراة (1v1)`;
-                    document.getElementById('summaryPlatform').innerText = 'PS4 (1v1)';
-                } else if (currentPlatform === 'ps4-2v2') {
-                    qtyDisplay = `${qty} مباراة (2v2)`;
-                    document.getElementById('summaryPlatform').innerText = 'PS4 (2v2)';
-                } else {
-                    qtyDisplay = `${qty} ليلة`;
-                    document.getElementById('summaryPlatform').innerText = 'كراء PS4 (ليلة)';
-                }
-                
-                document.getElementById('timeDisplayBadge').innerText = qtyDisplay;
+                total = qty * currentRate;
+                qtyText = qty + ' مباراة';
             }
 
-            const seatsText = selectedSeats.length > 0 ? selectedSeats.join(', ') : (currentPlatform === 'ps4-night' ? 'جهاز كراء خارجي' : 'لم يتم الاختيار');
-            document.getElementById('summarySeats').innerText = seatsText;
-            document.getElementById('summaryQty').innerText = qtyDisplay;
-            document.getElementById('summaryTotal').innerText = `${total} دج`;
+            document.getElementById('summaryQty').innerText = qtyText;
+            document.getElementById('summaryTotal').innerText = total + ' دج';
         }
 
-        async function confirmAndSendWhatsApp(phone) {
-            const customerName = document.getElementById('summaryCustomer').innerText;
-            const platform = document.getElementById('summaryPlatform').innerText;
-            const seatsText = document.getElementById('summarySeats').innerText;
+        function sendWhatsApp(phone) {
+            const customerName = document.getElementById('customerName').value || 'زائر';
+            const platformName = document.getElementById('summaryPlatform').innerText;
+            const seats = selectedSeats.length > 0 ? selectedSeats.join(', ') : 'بدون تحديد جهاز';
             const qty = document.getElementById('summaryQty').innerText;
-            const arrival = document.getElementById('summaryArrival').innerText;
-            const totalText = document.getElementById('summaryTotal').innerText;
+            const arrival = document.getElementById('arrivalTime').value;
+            const total = document.getElementById('summaryTotal').innerText;
 
-            if(selectedSeats.length === 0 && currentPlatform !== 'ps4-night') {
-                showToast('يرجى اختيار جهاز واحد على الأقل قبل إرسال الحجز!', true);
+            const msg = `السلام عليكم، أود تأكيد حجز في A@M Game:\n- الاسم: ${customerName}\n- الخدمة: ${platformName}\n- الأجهزة: ${seats}\n- المدة: ${qty}\n- وقت الوصول: ${arrival}\n- الإجمالي: ${total}`;
+            
+            // تسجيل الحجز سحابياً فور إرساله للواتساب
+            saveBookingToCloud({
+                customerName,
+                platform: platformName,
+                seats,
+                dateTime: new Date().toLocaleDateString('ar-DZ') + ' - ' + arrival,
+                duration: qty,
+                price: parseInt(total),
+                timestamp: Date.now()
+            });
+
+            window.open(`https://wa.me/213${phone.replace(/^0/, '')}?text=${encodeURIComponent(msg)}`, '_blank');
+        }
+
+        function saveBookingToCloud(bookingData) {
+            if (!db) return;
+            db.collection("bookings").add(bookingData).then(() => {
+                console.log("تم حفظ الحجز سحابياً بنجاح");
+            }).catch(err => {
+                console.error("خطأ في الحفظ السحابي:", err);
+            });
+        }
+
+        // Realtime sync for bookings & stats
+        window.occupiedSeatsCache = [];
+        if (db) {
+            db.collection("bookings").orderBy("timestamp", "desc").onSnapshot(snapshot => {
+                let bookings = [];
+                let occupied = [];
+                let dailyTotal = 0;
+                let weeklyTotal = 0;
+                let monthlyTotal = 0;
+                
+                const now = Date.now();
+                const oneDay = 24 * 60 * 60 * 1000;
+                const sevenDays = 7 * oneDay;
+                const thirtyDays = 30 * oneDay;
+
+                snapshot.forEach(doc => {
+                    let data = doc.data();
+                    data.id = doc.id;
+                    bookings.push(data);
+                    
+                    if (data.seats) {
+                        data.seats.split(', ').forEach(s => occupied.push(s));
+                    }
+
+                    if (data.timestamp) {
+                        let diff = now - data.timestamp;
+                        if (diff <= thirtyDays) monthlyTotal += (data.price || 0);
+                        if (diff <= sevenDays) weeklyTotal += (data.price || 0);
+                        if (diff <= oneDay) dailyTotal += (data.price || 0);
+                    }
+                });
+
+                window.occupiedSeatsCache = occupied;
+                renderSeats();
+
+                // Update UI Stats
+                document.getElementById('statDaily').innerText = dailyTotal + ' دج';
+                document.getElementById('statWeekly').innerText = weeklyTotal + ' دج';
+                document.getElementById('statMonthly').innerText = monthlyTotal + ' دج';
+                document.getElementById('statActiveSeats').innerText = occupied.length + ' أجهزة';
+
+                // Render Table
+                let tbody = document.getElementById('adminBookingsTable');
+                if (bookings.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="7" class="p-4 text-center text-gray-500">لا توجد حجوزات مسجلة حالياً</td></tr>`;
+                } else {
+                    tbody.innerHTML = bookings.map(b => `
+                        <tr class="border-b border-gray-800 hover:bg-gray-900/50">
+                            <td class="p-3 font-bold text-white">${b.customerName || '-'}</td>
+                            <td class="p-3 text-brand-blue">${b.platform || '-'}</td>
+                            <td class="p-3 font-bold text-brand-orange">${b.seats || '-'}</td>
+                            <td class="p-3 text-gray-300">${b.dateTime || '-'}</td>
+                            <td class="p-3">${b.duration || '-'}</td>
+                            <td class="p-3 font-bold text-green-400">${b.price || 0} دج</td>
+                            <td class="p-3 text-center">
+                                <button onclick="deleteBooking('${b.id}')" class="bg-red-900/40 text-red-400 hover:bg-red-900 px-2.5 py-1 rounded-lg transition">إلغاء وتفريغ الجهاز</button>
+                            </td>
+                        </tr>
+                    `).join('');
+                }
+            });
+        }
+
+        function deleteBooking(id) {
+            if (confirm('هل أنت متأكد من حذف هذا الحجز وتحرير الجهاز؟')) {
+                db.collection("bookings").doc(id).delete().then(() => {
+                    alert('تم حذف الحجز وتحرير الجهاز بنجاح!');
+                });
+            }
+        }
+
+        function addManualBooking() {
+            const customerName = document.getElementById('manualName').value;
+            const platform = document.getElementById('manualPlatform').value;
+            const seats = document.getElementById('manualSeats').value;
+            const duration = document.getElementById('manualDuration').value;
+            const price = parseInt(document.getElementById('manualPrice').value) || 0;
+
+            if (!customerName || !seats) {
+                alert('الرجاء إدخال اسم الزبون والأجهزة المحجوزة على الأقل.');
                 return;
             }
 
-            const amountValue = parseInt(totalText.replace(/\D/g, '')) || 0;
+            saveBookingToCloud({
+                customerName,
+                platform,
+                seats,
+                dateTime: new Date().toLocaleDateString('ar-DZ') + ' - ' + new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
+                duration: duration || 'ساعة',
+                price,
+                timestamp: Date.now()
+            });
 
-            const bookingData = {
-                name: customerName,
-                platform: platform,
-                seats: selectedSeats.length > 0 ? selectedSeats : [seatsText],
-                duration: qty,
-                amount: amountValue,
-                time: arrival,
-                date: new Date().toLocaleDateString('ar-DZ'),
-                createdAt: new Date().toISOString()
-            };
-
-            // Save to Firestore so it reflects on all devices
-            if (db) {
-                try {
-                    await db.collection('artifacts').doc(appId).collection('public').doc('data').collection('bookings').add(bookingData);
-                    showToast('تم تسجيل الحجز سحابياً فوراً وفتح الواتساب...');
-                } catch(e) {
-                    console.error("Cloud save error:", e);
-                }
-            } else {
-                adminBookings.unshift(bookingData);
-                localStorage.setItem('aMAdminBookings', JSON.stringify(adminBookings));
-                renderAdminTable();
-            }
-
-            const message = `السلام عليكم، طلب حجز جديد في صالة A@M Game بالقل:%0A- الاسم: ${customerName}%0A- الخدمة: ${platform}%0A- الأجهزة: ${seatsText}%0A- المدة/المباريات: ${qty}%0A- وقت الوصول المتوقع: ${arrival}%0A- الإجمالي: ${totalText}`;
-
-            window.open(`https://wa.me/213${phone.substring(1)}?text=${message}`, '_blank');
+            document.getElementById('manualName').value = '';
+            document.getElementById('manualSeats').value = '';
+            document.getElementById('manualDuration').value = '';
+            document.getElementById('manualPrice').value = '';
+            alert('تمت إضافة الحجز اليدوي بنجاح وتحديث النظام سحابياً!');
         }
 
-        // Initialize view
+        function clearAllBookings() {
+            if (confirm('تحذير: هل تريد حقاً مسح كل السجل وتفريغ جميع الأجهزة؟')) {
+                db.collection("bookings").get().then(querySnapshot => {
+                    let batch = db.batch();
+                    querySnapshot.forEach(doc => {
+                        batch.delete(doc.ref);
+                    });
+                    batch.commit().then(() => {
+                        alert('تم تفريغ السجل بالكامل.');
+                    });
+                });
+            }
+        }
+
+        // Admin Security & Cloud PIN Sync
+        function unlockAdmin() {
+            let adminPin = "123456";
+            if (db) {
+                db.collection("settings").doc("admin_config").get().then(doc => {
+                    if (doc.exists && doc.data().pin) {
+                        adminPin = doc.data().pin;
+                    }
+                    promptAndVerify(adminPin);
+                }).catch(() => {
+                    promptAndVerify(adminPin);
+                });
+            } else {
+                promptAndVerify(adminPin);
+            }
+        }
+
+        function promptAndVerify(correctPin) {
+            let pin = prompt("أدخل رمز مرور لوحة التحكم (الافتراضي: 123456):");
+            if (pin === correctPin) {
+                document.getElementById('adminPanel').classList.remove('hidden');
+                document.getElementById('adminLoginBtn').classList.add('hidden');
+                window.scrollTo({top: document.getElementById('adminPanel').offsetTop, behavior: 'smooth'});
+            } else if (pin !== null) {
+                alert('كلمة المرور غير صحيحة!');
+            }
+        }
+
+        function lockAdmin() {
+            document.getElementById('adminPanel').classList.add('hidden');
+            document.getElementById('adminLoginBtn').classList.remove('hidden');
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        }
+
+        function changeAdminPassword() {
+            let oldPin = document.getElementById('oldPinInput').value;
+            let newPin = document.getElementById('newPinInput').value;
+
+            if (!oldPin || !newPin) {
+                alert('الرجاء إدخال كلمة المرور القديمة والجديدة.');
+                return;
+            }
+
+            if (db) {
+                db.collection("settings").doc("admin_config").get().then(doc => {
+                    let currentPin = (doc.exists && doc.data().pin) ? doc.data().pin : "123456";
+                    if (oldPin !== currentPin) {
+                        alert('كلمة المرور القديمة غير صحيحة!');
+                        return;
+                    }
+
+                    db.collection("settings").doc("admin_config").set({ pin: newPin }).then(() => {
+                        alert('تم تحديث رمز مرور لوحة التحكم سحابياً بنجاح لجميع الأجهزة!');
+                        document.getElementById('oldPinInput').value = '';
+                        document.getElementById('newPinInput').value = '';
+                    });
+                });
+            }
+        }
+
+        // Initial setup
         setPlatform('pc', 100);
-        renderAdminTable();
     </script>
 </body>
 </html>
