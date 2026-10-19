@@ -636,6 +636,10 @@
         let auth = null;
         let currentUser = null;
 
+        // Default local admin pass as fallback
+        let currentAdminPassword = localStorage.getItem('aMAdminPass') || '123456';
+        let adminBookings = JSON.parse(localStorage.getItem('aMAdminBookings') || '[]');
+
         // Firebase Fallback / Initializer
         if (typeof __firebase_config !== 'undefined') {
             try {
@@ -670,8 +674,6 @@
         let currentPrice = 100;
         let selectedSeats = [];
         let bookedSeatsList = [];
-        let adminBookings = JSON.parse(localStorage.getItem('aMAdminBookings') || '[]');
-        let currentAdminPassword = localStorage.getItem('aMAdminPass') || '123456';
 
         function showToast(msg, isError = false) {
             const toast = document.getElementById('toastNotification');
@@ -709,9 +711,10 @@
         // --- Realtime Cloud Synchronization ---
         function initFirestoreListeners() {
             if(!db) return;
-            const publicCol = db.collection('artifacts').doc(appId).collection('public').doc('data').collection('bookings');
-            
-            publicCol.onSnapshot((snapshot) => {
+
+            // 1. Listen for Realtime Bookings across all devices
+            const bookingsCol = db.collection('artifacts').doc(appId).collection('public').doc('data').collection('bookings');
+            bookingsCol.onSnapshot((snapshot) => {
                 let cloudBookings = [];
                 let newBookedSeats = [];
 
@@ -727,16 +730,25 @@
                     }
                 });
 
-                if(cloudBookings.length > 0) {
-                    adminBookings = cloudBookings;
-                    localStorage.setItem('aMAdminBookings', JSON.stringify(adminBookings));
-                }
+                adminBookings = cloudBookings;
+                localStorage.setItem('aMAdminBookings', JSON.stringify(adminBookings));
                 bookedSeatsList = newBookedSeats;
 
                 renderAdminTable();
                 renderSeats();
             }, (err) => {
-                console.error("Firestore sync error:", err);
+                console.error("Bookings sync error:", err);
+            });
+
+            // 2. Listen for Admin Password across all devices
+            const settingsDoc = db.collection('artifacts').doc(appId).collection('public').doc('data').collection('settings').doc('admin_config');
+            settingsDoc.onSnapshot((doc) => {
+                if (doc.exists && doc.data().password) {
+                    currentAdminPassword = doc.data().password;
+                    localStorage.setItem('aMAdminPass', currentAdminPassword);
+                }
+            }, (err) => {
+                console.error("Settings sync error:", err);
             });
         }
 
@@ -756,7 +768,7 @@
             }
         }
 
-        function updateAdminPassword() {
+        async function updateAdminPassword() {
             const oldPass = document.getElementById('oldAdminPass').value;
             const newPass = document.getElementById('newAdminPass').value;
 
@@ -768,7 +780,23 @@
             if(newPass && newPass.length >= 4) {
                 currentAdminPassword = newPass;
                 localStorage.setItem('aMAdminPass', newPass);
-                showToast('تم تحديث كلمة المرور بنجاح');
+
+                // Sync password to Cloud Firestore for all devices
+                if (db) {
+                    try {
+                        await db.collection('artifacts').doc(appId).collection('public').doc('data').collection('settings').doc('admin_config').set({
+                            password: newPass,
+                            updatedAt: new Date().toISOString()
+                        }, { merge: true });
+                        showToast('تم تحديث كلمة المرور ومزامنتها على جميع الأجهزة!');
+                    } catch(e) {
+                        console.error("Error updating password in cloud:", e);
+                        showToast('تم التحديث محلياً تعذر الاتصال بالسحاب', true);
+                    }
+                } else {
+                    showToast('تم تحديث كلمة المرور بنجاح (محلياً)');
+                }
+
                 document.getElementById('oldAdminPass').value = '';
                 document.getElementById('newAdminPass').value = '';
             } else {
@@ -806,7 +834,7 @@
                     <td class="p-3 text-gray-300">${b.duration || b.qty || '1'}</td>
                     <td class="p-3 font-black text-brand-orange">${b.amount || 0} دج</td>
                     <td class="p-3 text-center">
-                        <button onclick="deleteBooking('${b.id}', ${index})" class="text-red-400 hover:text-red-300 p-1">
+                        <button onclick="deleteBooking('${b.id || ''}', ${index})" class="text-red-400 hover:text-red-300 p-1">
                             <i class="fa-solid fa-trash"></i>
                         </button>
                     </td>
@@ -835,13 +863,14 @@
                 duration,
                 amount,
                 date: new Date().toLocaleDateString('ar-DZ'),
-                time: new Date().toLocaleTimeString('ar-DZ', { hour: '2-digit', minute: '2-digit' })
+                time: new Date().toLocaleTimeString('ar-DZ', { hour: '2-digit', minute: '2-digit' }),
+                createdAt: new Date().toISOString()
             };
 
             if (db) {
                 try {
                     await db.collection('artifacts').doc(appId).collection('public').doc('data').collection('bookings').add(newBooking);
-                    showToast('تمت إضافة الحجز ومزامنة البيانات سحابياً');
+                    showToast('تمت إضافة الحجز ومزامنة البيانات سحابياً فوراً');
                 } catch(e) {
                     console.error("Error adding doc: ", e);
                     adminBookings.unshift(newBooking);
@@ -864,7 +893,7 @@
             if (db && docId) {
                 try {
                     await db.collection('artifacts').doc(appId).collection('public').doc('data').collection('bookings').doc(docId).delete();
-                    showToast('تم حذف الحجز سحابياً بنجاح');
+                    showToast('تم حذف الحجز سحابياً من كل الأجهزة');
                 } catch(e) {
                     console.error("Delete error:", e);
                 }
@@ -1047,14 +1076,15 @@
                 duration: qty,
                 amount: amountValue,
                 time: arrival,
-                date: new Date().toLocaleDateString('ar-DZ')
+                date: new Date().toLocaleDateString('ar-DZ'),
+                createdAt: new Date().toISOString()
             };
 
             // Save to Firestore so it reflects on all devices
             if (db) {
                 try {
                     await db.collection('artifacts').doc(appId).collection('public').doc('data').collection('bookings').add(bookingData);
-                    showToast('تم تسجيل الحجز في النظام وإعادة توجيهك للواتساب...');
+                    showToast('تم تسجيل الحجز سحابياً فوراً وفتح الواتساب...');
                 } catch(e) {
                     console.error("Cloud save error:", e);
                 }
