@@ -592,7 +592,8 @@
             bookingsList.push(newBooking);
             saveAndRenderBookings();
 
-            const text = `السلام عليكم، أريد تأكيد حجز في صالة A@M Game بالقل:%0A- اسم الزبون: ${customer}%0A- نوع الخدمة: ${platformLabel}%0A- الأجهزة المحجوزة بالضبط: ${sortedSeats}%0A- وقت الوصول المتوقع: ${arrival}%0A- المدة / الكمية: ${qtyText}%0A- المبلغ الإجمالي: ${totalStr}`;
+            // Updated WhatsApp message format
+            const text = `${customer}: لقد حجزت مكاناً، الرجاء الاطلاع على الحجوزات.%0A- نوع الخدمة: ${platformLabel}%0A- الأجهزة المحجوزة بالضبط: ${sortedSeats}%0A- وقت الوصول المتوقع: ${arrival}%0A- المدة / الكمية: ${qtyText}%0A- المبلغ الإجمالي: ${totalStr}`;
             window.open(`https://wa.me/213${phone.substring(1)}?text=${text}`, '_blank');
         }
 
@@ -683,19 +684,16 @@
 
             let computedPrice = 0;
 
-            // Extract seat count
             let seatsNum = 1;
             if (seats.includes(',')) {
                 seatsNum = seats.split(',').length;
             }
 
-            // Extract quantity number
             let qtyNum = parseInt(qty.replace(/[^0-9]/g, '')) || 1;
 
             if (inputPrice !== '' && !isNaN(parseInt(inputPrice))) {
                 computedPrice = parseInt(inputPrice);
             } else {
-                // Auto calculate price if empty
                 if (platform.includes('PC')) {
                     computedPrice = qtyNum * 100 * seatsNum;
                 } else if (platform.includes('1v1')) {
@@ -722,7 +720,6 @@
             bookingsList.push(newBooking);
             saveAndRenderBookings();
 
-            // Clear input fields
             document.getElementById('manualName').value = '';
             document.getElementById('manualSeats').value = '';
             document.getElementById('manualQty').value = '';
