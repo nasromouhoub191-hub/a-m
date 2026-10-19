@@ -301,6 +301,19 @@
             <p class="text-gray-400">اختر تاريخ ووقت الوصول والأجهزة المتاحة (باللون الأخضر) واحجز فوراً عبر واتساب</p>
         </div>
 
+        <!-- بطاقة متابعة حالة حجز الزبون اللحظية -->
+        <div id="clientStatusCard" class="hidden mb-8 bg-brand-card p-6 rounded-2xl border border-gray-800 shadow-2xl text-center transition-all duration-300">
+            <h3 class="text-xl font-black mb-3 text-brand-orange flex items-center justify-center gap-2">
+                <i class="fa-solid fa-bell"></i> متابعة حالة حجزك الأخير
+            </h3>
+            <div id="statusMessageContainer" class="p-4 rounded-xl font-bold text-sm">
+                <!-- يتم حقن رسالة الحالة هنا ديناميكياً -->
+            </div>
+            <button onclick="clearMyBooking()" class="mt-4 bg-gray-800 hover:bg-gray-700 text-gray-300 text-xs px-4 py-2 rounded-lg transition">
+                حجز جديد / مسح متابعة الحجز الحالي
+            </button>
+        </div>
+
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <div class="lg:col-span-2 bg-brand-card p-6 rounded-2xl border border-gray-800 shadow-xl space-y-6">
                 <div>
@@ -598,12 +611,18 @@
         let selectedSeats = [];
         let globalBookingsCache = [];
 
-        // تعيين تاريخ اليوم افتراضياً في خانة التاريخ
+        // تعيين تاريخ اليوم افتراضياً في خانة التاريخ واستعادة الحجز المخزن إن وجد
         window.addEventListener('DOMContentLoaded', () => {
             const today = new Date().toISOString().split('T')[0];
             const dateInput = document.getElementById('bookingDate');
             if(dateInput) dateInput.value = today;
             setPlatform('pc', 100);
+
+            // تفعيل متابعة الحجز للزبون عبر الـ localStorage
+            const savedBookingId = localStorage.getItem('myBookingId');
+            if (savedBookingId) {
+                listenToMyBooking(savedBookingId);
+            }
         });
 
         function triggerInstall() {
@@ -667,10 +686,9 @@
             const selectedDate = document.getElementById('bookingDate').value;
             const selectedTime = document.getElementById('arrivalTime').value;
 
-            // تحديد الأجهزة المشغولة في نفس التاريخ والوقت المختار وحجزها مقبول
             let occupiedAtThisTime = [];
             globalBookingsCache.forEach(b => {
-                if (b.status === 'مقبول' && b.rawDate === selectedDate && b.rawTime === selectedTime) {
+                if (b.status === 'accepted' && b.rawDate === selectedDate && b.rawTime === selectedTime) {
                     if (b.seats) {
                         b.seats.split(', ').forEach(s => {
                             if (!occupiedAtThisTime.includes(s)) occupiedAtThisTime.push(s);
@@ -769,10 +787,9 @@
                 return;
             }
 
-            // التحقق الذكي الفوري من تعارض الأجهزة في نفس الوقت والتاريخ المقبول سابقاً
             let conflictFound = false;
             globalBookingsCache.forEach(b => {
-                if (b.status === 'مقبول' && b.rawDate === dateVal && b.rawTime === timeVal) {
+                if (b.status === 'accepted' && b.rawDate === dateVal && b.rawTime === timeVal) {
                     seats.split(', ').forEach(s => {
                         if (b.seats && b.seats.includes(s)) {
                             conflictFound = true;
@@ -788,29 +805,69 @@
 
             const msg = `السلام عليكم، أود تأكيد حجز في A@M Game:\n- الاسم: ${customerName}\n- الخدمة: ${platformName}\n- الأجهزة: ${seats}\n- التاريخ والوقت: ${dateVal} على ${timeVal}\n- المدة: ${qty}\n- الإجمالي: ${total}`;
             
-            saveBookingToCloud({
-                customerName,
-                platform: platformName,
-                seats,
-                rawDate: dateVal,
-                rawTime: timeVal,
-                dateTime: `${dateVal} - ${timeVal}`,
-                duration: qty,
-                price: parseInt(total),
-                status: 'قيد الانتظار',
-                timestamp: Date.now()
-            });
+            // حفظ الحجز في السحابة واستلام الـ Doc ID لمتابعة الحالة فوراً
+            if (db) {
+                db.collection("bookings").add({
+                    customerName,
+                    platform: platformName,
+                    seats,
+                    rawDate: dateVal,
+                    rawTime: timeVal,
+                    dateTime: `${dateVal} - ${timeVal}`,
+                    duration: qty,
+                    price: parseInt(total),
+                    status: 'pending',
+                    timestamp: Date.now()
+                }).then((docRef) => {
+                    localStorage.setItem('myBookingId', docRef.id);
+                    listenToMyBooking(docRef.id);
+                }).catch(err => {
+                    console.error("خطأ في الحفظ السحابي:", err);
+                });
+            }
 
             window.open(`https://wa.me/213${phone.replace(/^0/, '')}?text=${encodeURIComponent(msg)}`, '_blank');
         }
 
-        function saveBookingToCloud(bookingData) {
-            if (!db) return;
-            db.collection("bookings").add(bookingData).then(() => {
-                console.log("تم حفظ الحجز سحابياً بنجاح");
-            }).catch(err => {
-                console.error("خطأ في الحفظ السحابي:", err);
+        // الاستماع الفوري لحالة الحجز الخاص بالزبون
+        function listenToMyBooking(bookingId) {
+            const statusCard = document.getElementById('clientStatusCard');
+            const msgContainer = document.getElementById('statusMessageContainer');
+
+            if (!bookingId || !db) {
+                statusCard.classList.add('hidden');
+                return;
+            }
+
+            statusCard.classList.remove('hidden');
+            msgContainer.className = "p-4 rounded-xl font-bold text-sm bg-yellow-950/60 border border-yellow-500/50 text-yellow-300";
+            msgContainer.innerHTML = `<i class="fa-solid fa-spinner fa-spin ml-1"></i> حجزك قيد المراجعة من طرف إدارة الصالة...`;
+
+            db.collection("bookings").doc(bookingId).onSnapshot((doc) => {
+                if (doc.exists) {
+                    const data = doc.data();
+                    const status = data.status;
+
+                    if (status === 'accepted') {
+                        msgContainer.className = "p-4 rounded-xl font-bold text-sm bg-green-950/80 border border-green-500 text-green-300 shadow-[0_0_15px_rgba(34,197,94,0.3)]";
+                        msgContainer.innerHTML = `<i class="fa-solid fa-circle-check text-lg ml-1"></i> تم قبول حجزك بنجاح! ننتظرك في الصالة. (${data.seats})`;
+                    } else if (status === 'rejected') {
+                        msgContainer.className = "p-4 rounded-xl font-bold text-sm bg-red-950/80 border border-red-500 text-red-300 shadow-[0_0_15px_rgba(239,68,68,0.3)]";
+                        msgContainer.innerHTML = `<i class="fa-solid fa-circle-xmark text-lg ml-1"></i> نعتذر منك، تم رفض الحجز أو الوقت غير متاح.`;
+                    } else {
+                        msgContainer.className = "p-4 rounded-xl font-bold text-sm bg-yellow-950/60 border border-yellow-500/50 text-yellow-300";
+                        msgContainer.innerHTML = `<i class="fa-solid fa-spinner fa-spin ml-1"></i> حجزك قيد المراجعة من طرف إدارة الصالة...`;
+                    }
+                } else {
+                    statusCard.classList.add('hidden');
+                    localStorage.removeItem('myBookingId');
+                }
             });
+        }
+
+        function clearMyBooking() {
+            localStorage.removeItem('myBookingId');
+            document.getElementById('clientStatusCard').classList.add('hidden');
         }
 
         if (db) {
@@ -831,13 +888,13 @@
                     data.id = doc.id;
                     bookings.push(data);
                     
-                    if (data.seats && data.status !== 'مرفوض') {
+                    if (data.seats && data.status !== 'rejected') {
                         data.seats.split(', ').forEach(s => {
-                            if (s && !occupiedGeneral.includes(s)) occupiedGeneral.includes(s);
+                            if (s && !occupiedGeneral.includes(s)) occupiedGeneral.push(s);
                         });
                     }
 
-                    if (data.timestamp && data.status === 'مقبول') {
+                    if (data.timestamp && data.status === 'accepted') {
                         let diff = now - data.timestamp;
                         if (diff <= thirtyDays) monthlyTotal += (data.price || 0);
                         if (diff <= sevenDays) weeklyTotal += (data.price || 0);
@@ -857,35 +914,43 @@
                 if (bookings.length === 0) {
                     tbody.innerHTML = `<tr><td colspan="7" class="p-4 text-center text-gray-500">لا توجد حجوزات مسجلة حالياً</td></tr>`;
                 } else {
-                    tbody.innerHTML = bookings.map(b => `
-                        <tr class="border-b border-gray-800 hover:bg-gray-900/50">
-                            <td class="p-3 font-bold text-white">${b.customerName || '-'}</td>
-                            <td class="p-3 text-brand-blue">${b.platform || '-'}</td>
-                            <td class="p-3 font-bold text-brand-orange">${b.seats || '-'}</td>
-                            <td class="p-3 text-gray-300">${b.dateTime || '-'}</td>
-                            <td class="p-3">${b.duration || '-'}</td>
-                            <td class="p-3 font-bold text-green-400">${b.price || 0} دج</td>
-                            <td class="p-3 text-center space-x-1 space-x-reverse">
-                                <span class="inline-block px-2 py-1 rounded text-[10px] font-bold ${b.status === 'مقبول' ? 'bg-green-900 text-green-300' : b.status === 'مرفوض' ? 'bg-red-900 text-red-300' : 'bg-yellow-900 text-yellow-300'} mb-1">${b.status || 'قيد الانتظار'}</span><br>
-                                <button onclick="acceptBooking('${b.id}')" class="bg-green-600 hover:bg-green-500 text-white px-2 py-1 rounded text-[11px] font-bold transition">قبول</button>
-                                <button onclick="rejectBooking('${b.id}', '${b.customerName || 'الزبون'}', '${b.seats || 'الأجهزة'}')" class="bg-red-600 hover:bg-red-500 text-white px-2 py-1 rounded text-[11px] font-bold transition">رفض واعتذار</button>
-                                <button onclick="deleteBooking('${b.id}')" class="bg-gray-700 hover:bg-gray-600 text-gray-300 px-2 py-1 rounded text-[11px] transition">حذف</button>
-                            </td>
-                        </tr>
-                    `).join('');
+                    tbody.innerHTML = bookings.map(b => {
+                        let statusBadge = b.status === 'accepted' ? '<span class="bg-green-900 text-green-300 px-2 py-1 rounded text-[10px] font-bold">مقبول (Accepted)</span>' : 
+                                          b.status === 'rejected' ? '<span class="bg-red-900 text-red-300 px-2 py-1 rounded text-[10px] font-bold">مرفوض (Rejected)</span>' : 
+                                          '<span class="bg-yellow-900 text-yellow-300 px-2 py-1 rounded text-[10px] font-bold">قيد الانتظار (Pending)</span>';
+
+                        return `
+                            <tr class="border-b border-gray-800 hover:bg-gray-900/50">
+                                <td class="p-3 font-bold text-white">${b.customerName || '-'}</td>
+                                <td class="p-3 text-brand-blue">${b.platform || '-'}</td>
+                                <td class="p-3 font-bold text-brand-orange">${b.seats || '-'}</td>
+                                <td class="p-3 text-gray-300">${b.dateTime || '-'}</td>
+                                <td class="p-3">${b.duration || '-'}</td>
+                                <td class="p-3 font-bold text-green-400">${b.price || 0} دج</td>
+                                <td class="p-3 text-center space-x-1 space-x-reverse">
+                                    <div class="mb-1">${statusBadge}</div>
+                                    <button onclick="acceptBooking('${b.id}')" class="bg-green-600 hover:bg-green-500 text-white px-2 py-1 rounded text-[11px] font-bold transition">قبول</button>
+                                    <button onclick="rejectBooking('${b.id}', '${b.customerName || 'الزبون'}', '${b.seats || 'الأجهزة'}')" class="bg-red-600 hover:bg-red-500 text-white px-2 py-1 rounded text-[11px] font-bold transition">رفض واعتذار</button>
+                                    <button onclick="deleteBooking('${b.id}')" class="bg-gray-700 hover:bg-gray-600 text-gray-300 px-2 py-1 rounded text-[11px] transition">حذف</button>
+                                </td>
+                            </tr>
+                        `;
+                    }).join('');
                 }
             });
         }
 
+        // دالة قبول الحجز في لوحة الإدارة (تحديث الحالة إلى accepted)
         function acceptBooking(id) {
-            db.collection("bookings").doc(id).update({ status: 'مقبول' }).then(() => {
+            db.collection("bookings").doc(id).update({ status: 'accepted' }).then(() => {
                 alert('تم قبول وتأكيد الحجز بنجاح!');
             });
         }
 
+        // دالة رفض الحجز في لوحة الإدارة (تحديث الحالة إلى rejected وفتح واتساب برسالة اعتذار)
         function rejectBooking(id, customerName, seats) {
-            db.collection("bookings").doc(id).update({ status: 'مرفوض' }).then(() => {
-                const apologyMsg = `السلام عليكم ${customerName}، نعتذر منك بشدة في صالة A@M Game، الأجهزة المطلوبة (${seats}) مشغولة في ذلك الوقت المحدد. نتمنى زيارتك في أوقات أخرى!`;
+            db.collection("bookings").doc(id).update({ status: 'rejected' }).then(() => {
+                const apologyMsg = `السلام عليكم ${customerName}، نعتذر منك بشدة في صالة A@M Game، الأجهزة المطلوبة (${seats}) غير متاحة في ذلك الوقت المحدد. ننتظر زيارتك في أوقات أخرى!`;
                 window.open(`https://wa.me/?text=${encodeURIComponent(apologyMsg)}`, '_blank');
             });
         }
