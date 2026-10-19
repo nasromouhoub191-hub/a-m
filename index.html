@@ -429,7 +429,7 @@
         </div>
     </section>
 
-    <!-- Admin Section with Advanced Financial Statistics & Password Change -->
+    <!-- Admin Section with Cloud-Synced PIN -->
     <section class="py-10 bg-gray-950 border-t border-gray-900">
         <div class="max-w-7xl mx-auto px-4 text-center">
             
@@ -457,13 +457,13 @@
                     </div>
                 </div>
 
-                <!-- Change Password Box -->
+                <!-- Change Password Box (Cloud Synced) -->
                 <div class="bg-gray-900 p-4 rounded-xl border border-gray-800 mb-6 flex flex-col sm:flex-row items-center justify-between gap-4">
                     <div class="flex items-center gap-2">
                         <i class="fa-solid fa-key text-brand-orange text-lg"></i>
                         <div>
-                            <h4 class="font-bold text-sm text-white">تغيير رمز مرور لوحة التحكم (PIN)</h4>
-                            <p class="text-[11px] text-gray-400">الرمز الافتراضي هو <code class="text-brand-blue">a@m@j</code></p>
+                            <h4 class="font-bold text-sm text-white">تغيير رمز مرور لوحة التحكم (متزامن سحابياً)</h4>
+                            <p class="text-[11px] text-gray-400">الرمز الحالي متزامن بين جميع الهواتف</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-2 w-full sm:w-auto">
@@ -547,7 +547,7 @@
         <p>© 2026 A@M Game - صالة ألعاب القل، سكيكدة. جميع الحقوق محفوظة.</p>
     </footer>
 
-    <!-- Logic Script with Password Update & Firebase Live Sync -->
+    <!-- Logic Script with Cloud-Synced Admin PIN -->
     <script>
         const firebaseConfig = {
             apiKey: "AIzaSyBf7TlgpXTV83fFNlyPeRO217KFE_84z_w",
@@ -568,11 +568,17 @@
         let currentPrice = 100;
         let selectedSeats = [];
         let bookingsList = [];
+        let currentAdminPin = 'a@m@j'; // الرمز الافتراضي
 
-        // إدارة كلمة المرور الديناميكية عبر LocalStorage
-        function getAdminPin() {
-            return localStorage.getItem('am_admin_pin') || 'a@m@j';
-        }
+        // جلب كلمة المرور المحدثة من السحابة مباشرة
+        db.collection("settings").doc("adminConfig").onSnapshot((doc) => {
+            if (doc.exists && doc.data().pin) {
+                currentAdminPin = doc.data().pin;
+            } else {
+                // إنشاء وثيقة الكلمة الافتراضية إذا لم تكن موجودة
+                db.collection("settings").doc("adminConfig").set({ pin: 'a@m@j' }).catch(err => console.error(err));
+            }
+        });
 
         db.collection("bookings").orderBy("timestamp", "desc").onSnapshot((snapshot) => {
             bookingsList = [];
@@ -728,7 +734,7 @@
 
         function unlockAdmin() {
             const pin = prompt("أدخل رمز المرور الخاص بالمالكين والعامل:");
-            if (pin === getAdminPin()) {
+            if (pin === currentAdminPin) {
                 document.getElementById('adminPanel').classList.remove('hidden');
                 document.getElementById('adminLoginBtn').classList.add('hidden');
                 renderAdminTable();
@@ -746,7 +752,7 @@
             const oldPin = document.getElementById('oldPinInput').value;
             const newPin = document.getElementById('newPinInput').value;
 
-            if (oldPin !== getAdminPin()) {
+            if (oldPin !== currentAdminPin) {
                 alert("كلمة المرور القديمة غير صحيحة!");
                 return;
             }
@@ -755,10 +761,17 @@
                 return;
             }
 
-            localStorage.setItem('am_admin_pin', newPin);
-            alert("تم تحديث كلمة المرور بنجاح! احتفظ بها في مكان آمن.");
-            document.getElementById('oldPinInput').value = '';
-            document.getElementById('newPinInput').value = '';
+            // تحديث كلمة المرور في قاعدة البيانات السحابية لتتغير على كل الأجهزة
+            db.collection("settings").doc("adminConfig").update({
+                pin: newPin
+            }).then(() => {
+                alert("تم تحديث كلمة المرور سحابياً بنجاح! ستتغير على جميع الأجهزة فوراً.");
+                document.getElementById('oldPinInput').value = '';
+                document.getElementById('newPinInput').value = '';
+            }).catch(err => {
+                console.error(err);
+                alert("حدث خطأ أثناء التحديث السحابي.");
+            });
         }
 
         function toggleManualInputType() {
