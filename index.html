@@ -76,7 +76,6 @@
             <h2 class="text-3xl font-black mb-2"><span class="text-brand-blue neon-text-blue">A@M GAME</span> <span class="text-brand-orange">القل</span></h2>
             <p class="text-gray-300 text-sm mb-4">مرحباً بكم في الصالة الأولى للألعاب الإلكترونية وتحديات الشبكة والـ PS4 في مدينة القل!</p>
             
-            <!-- Comfort & Security Badges -->
             <div class="grid grid-cols-2 gap-2 mb-4 text-xs font-bold">
                 <div class="bg-cyan-950/60 border border-cyan-500/40 text-cyan-300 p-2.5 rounded-xl flex items-center justify-center gap-2">
                     <i class="fa-solid fa-snowflake text-lg text-cyan-400"></i> قاعة مكيفة بالكامل
@@ -86,7 +85,6 @@
                 </div>
             </div>
 
-            <!-- Services Summary -->
             <div class="bg-gray-900/80 p-4 rounded-2xl border border-gray-800 text-right space-y-2 mb-4 text-xs text-gray-300">
                 <div class="flex items-center gap-2"><i class="fa-solid fa-desktop text-brand-blue"></i> CS 1.6 PC: 100 دج / ساعة</div>
                 <div class="flex items-center gap-2"><i class="fa-solid fa-gamepad text-brand-orange"></i> PS4 (1v1 & 2v2): ابتداءً من 50 دج / مباراة</div>
@@ -175,7 +173,7 @@
         </div>
     </section>
 
-    <!-- SECTION 1: Rules Only (القواعد وحدها) -->
+    <!-- SECTION 1: Rules Only -->
     <section id="rules" class="py-12 px-4 max-w-5xl mx-auto w-full">
         <div class="bg-brand-card p-6 md:p-8 rounded-3xl border border-gray-800 shadow-2xl relative overflow-hidden">
             <div class="text-center mb-8">
@@ -245,11 +243,9 @@
         </div>
     </section>
 
-    <!-- SECTION 2: Features Only (الكاميرات والكليماتيزور وحدها) -->
+    <!-- SECTION 2: Features Only -->
     <section id="features" class="py-6 px-4 max-w-5xl mx-auto w-full">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            
-            <!-- Climatisé -->
             <div class="bg-cyan-950/40 border border-cyan-500/40 p-6 rounded-3xl shadow-xl flex items-center gap-5">
                 <div class="w-16 h-16 bg-cyan-500/20 rounded-2xl flex items-center justify-center shrink-0">
                     <i class="fa-solid fa-snowflake text-3xl text-cyan-400"></i>
@@ -262,7 +258,6 @@
                 </div>
             </div>
 
-            <!-- CCTV Cameras -->
             <div class="bg-red-950/40 border border-red-500/40 p-6 rounded-3xl shadow-xl flex items-center gap-5">
                 <div class="w-16 h-16 bg-red-500/20 rounded-2xl flex items-center justify-center shrink-0">
                     <i class="fa-solid fa-video text-3xl text-red-400"></i>
@@ -274,7 +269,6 @@
                     </p>
                 </div>
             </div>
-
         </div>
     </section>
 
@@ -286,16 +280,12 @@
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <!-- Form Selection -->
             <div class="lg:col-span-2 bg-brand-card p-6 rounded-2xl border border-gray-800 shadow-xl space-y-6">
-                
-                <!-- Customer Name -->
                 <div>
                     <label class="block font-bold text-sm mb-2 text-gray-300">1. اسمك الكريِم (أو اسم المحجوز له):</label>
                     <input type="text" id="customerName" placeholder="مثال: حسام وأصدقاؤه" class="w-full bg-gray-900 border border-gray-700 rounded-xl p-3 text-white font-bold focus:border-brand-blue focus:outline-none">
                 </div>
 
-                <!-- Select Platform -->
                 <div>
                     <label class="block font-bold text-sm mb-3 text-gray-300">2. اختر نوع الخدمة:</label>
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
@@ -318,14 +308,12 @@
                     </div>
                 </div>
 
-                <!-- Dynamic Quantity Selector -->
                 <div>
                     <div class="flex justify-between items-center mb-2">
                         <label id="quantityLabel" class="font-bold text-sm text-gray-300">3. اختر الوقت (بالساعات والدقائق):</label>
                         <span id="timeDisplayBadge" class="bg-brand-blue/20 text-brand-blue border border-brand-blue/40 px-3 py-1 rounded-lg text-sm font-black">1 ساعة</span>
                     </div>
 
-                    <!-- Slider for PC (Hours & Minutes) -->
                     <div id="pcSliderContainer" class="bg-gray-900 p-4 rounded-xl border border-gray-800">
                         <input type="range" id="timeSlider" min="15" max="300" step="15" value="60" oninput="calculateTotal()" class="w-full h-2 bg-gray-800 rounded-lg appearance-none cursor-pointer">
                         <div class="flex justify-between text-xs text-gray-400 mt-2 font-bold">
@@ -337,28 +325,22 @@
                         </div>
                     </div>
 
-                    <!-- Input Number for PS4 Matches or Nights -->
                     <div id="numberInputContainer" class="hidden">
                         <input type="number" id="quantityInput" min="1" max="20" value="1" onchange="calculateTotal()" class="w-full bg-gray-900 border border-gray-700 rounded-xl p-3 text-white font-bold text-center focus:border-brand-blue focus:outline-none">
                     </div>
                 </div>
 
-                <!-- Arrival Time -->
                 <div>
                     <label class="block font-bold text-sm mb-2 text-gray-300">4. الوقت المتوقع للحضور إلى الصالة:</label>
                     <input type="time" id="arrivalTime" value="16:00" onchange="calculateTotal()" class="w-full bg-gray-900 border border-gray-700 rounded-xl p-3 text-white font-bold text-center focus:border-brand-orange focus:outline-none">
                 </div>
 
-                <!-- Seat Grid -->
                 <div>
                     <label class="block font-bold text-sm mb-2 text-gray-300">5. اختر الأجهزة المحددة بالظبط (Sélection):</label>
-                    <div id="seatsGrid" class="grid grid-cols-5 gap-3 p-4 bg-gray-900 rounded-xl border border-gray-800">
-                        <!-- Dynamic Seats -->
-                    </div>
+                    <div id="seatsGrid" class="grid grid-cols-5 gap-3 p-4 bg-gray-900 rounded-xl border border-gray-800"></div>
                 </div>
             </div>
 
-            <!-- Summary & WhatsApp Action -->
             <div class="bg-brand-card p-6 rounded-2xl border border-gray-800 shadow-xl flex flex-col justify-between">
                 <div>
                     <h3 class="text-xl font-bold mb-4 text-brand-orange border-b border-gray-800 pb-3">ملخص الحجز</h3>
@@ -418,11 +400,8 @@
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <!-- جاليل -->
             <div class="bg-brand-card p-6 rounded-2xl border border-gray-800 text-center relative overflow-hidden">
-                <div class="w-16 h-16 bg-gradient-to-tr from-brand-orange to-brand-blue rounded-full mx-auto flex items-center justify-center text-black font-black text-2xl mb-4">
-                    J
-                </div>
+                <div class="w-16 h-16 bg-gradient-to-tr from-brand-orange to-brand-blue rounded-full mx-auto flex items-center justify-center text-black font-black text-2xl mb-4">J</div>
                 <h3 class="font-bold text-xl mb-1">جاليل</h3>
                 <p class="text-xs text-brand-blue font-bold mb-4">المشرف والقائم على الخدمة</p>
                 <a href="tel:0559935670" class="block bg-gray-900 hover:bg-brand-blue hover:text-black text-brand-blue border border-brand-blue/40 font-bold py-2.5 px-4 rounded-xl transition">
@@ -430,11 +409,8 @@
                 </a>
             </div>
 
-            <!-- مهدي بورفيس -->
             <div class="bg-brand-card p-6 rounded-2xl border border-gray-800 text-center relative overflow-hidden">
-                <div class="w-16 h-16 bg-gradient-to-tr from-brand-blue to-purple-600 rounded-full mx-auto flex items-center justify-center text-black font-black text-2xl mb-4">
-                    M
-                </div>
+                <div class="w-16 h-16 bg-gradient-to-tr from-brand-blue to-purple-600 rounded-full mx-auto flex items-center justify-center text-black font-black text-2xl mb-4">M</div>
                 <h3 class="font-bold text-xl mb-1">مهدي بورفيس</h3>
                 <p class="text-xs text-brand-orange font-bold mb-4">المالك (Owner)</p>
                 <a href="tel:0556751958" class="block bg-gray-900 hover:bg-brand-orange hover:text-black text-brand-orange border border-brand-orange/40 font-bold py-2.5 px-4 rounded-xl transition">
@@ -442,11 +418,8 @@
                 </a>
             </div>
 
-            <!-- علاء بولمدن -->
             <div class="bg-brand-card p-6 rounded-2xl border border-gray-800 text-center relative overflow-hidden">
-                <div class="w-16 h-16 bg-gradient-to-tr from-brand-orange to-red-600 rounded-full mx-auto flex items-center justify-center text-black font-black text-2xl mb-4">
-                    A
-                </div>
+                <div class="w-16 h-16 bg-gradient-to-tr from-brand-orange to-red-600 rounded-full mx-auto flex items-center justify-center text-black font-black text-2xl mb-4">A</div>
                 <h3 class="font-bold text-xl mb-1">علاء بولمدن</h3>
                 <p class="text-xs text-brand-orange font-bold mb-4">المالك (Owner)</p>
                 <a href="tel:0782890923" class="block bg-gray-900 hover:bg-brand-orange hover:text-black text-brand-orange border border-brand-orange/40 font-bold py-2.5 px-4 rounded-xl transition">
@@ -456,7 +429,7 @@
         </div>
     </section>
 
-    <!-- Admin Section -->
+    <!-- Admin Section with Advanced Financial Statistics & Password Change -->
     <section class="py-10 bg-gray-950 border-t border-gray-900">
         <div class="max-w-7xl mx-auto px-4 text-center">
             
@@ -467,17 +440,16 @@
             <!-- Admin Panel (Initially Hidden) -->
             <div id="adminPanel" class="hidden text-right bg-brand-card p-6 rounded-2xl border border-gray-800 shadow-2xl mt-4">
                 
-                <!-- Panel Header -->
                 <div class="flex flex-col md:flex-row justify-between items-center mb-6 border-b border-gray-800 pb-4 gap-4">
                     <div>
                         <h3 class="text-2xl font-black text-brand-orange flex items-center gap-2">
-                            <i class="fa-solid fa-sliders"></i> جدول الحجوزات اليومي (A@M Admin)
+                            <i class="fa-solid fa-chart-line"></i> لوحة الإدارة والإحصائيات المالية (A@M Admin)
                         </h3>
-                        <p class="text-xs text-gray-400 mt-1">متابعة الحجوزات اليومية وإدارة الأجهزة والمداخيل مباشرة (متصل سحابياً بلحظتها)</p>
+                        <p class="text-xs text-gray-400 mt-1">متابعة المداخيل اليومية، الأسبوعية والشهرية وإدارة الحجوزات سحابياً</p>
                     </div>
                     <div class="flex items-center gap-2">
                         <button onclick="clearAllBookings()" class="bg-red-900/30 hover:bg-red-900/60 text-red-400 border border-red-800 text-xs px-3 py-2 rounded-xl transition font-bold">
-                            <i class="fa-solid fa-trash-can ml-1"></i> تفريغ جميع الحجوزات
+                            <i class="fa-solid fa-trash-can ml-1"></i> تفريغ السجل
                         </button>
                         <button onclick="lockAdmin()" class="bg-gray-800 hover:bg-gray-700 text-gray-300 text-xs px-4 py-2 rounded-xl border border-gray-700 font-bold">
                             قفل اللوحة <i class="fa-solid fa-lock mr-1"></i>
@@ -485,34 +457,51 @@
                     </div>
                 </div>
 
-                <!-- Analytics Cards -->
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                    <div class="bg-gray-900 p-4 rounded-xl border border-gray-800 flex items-center justify-between">
+                <!-- Change Password Box -->
+                <div class="bg-gray-900 p-4 rounded-xl border border-gray-800 mb-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-key text-brand-orange text-lg"></i>
                         <div>
-                            <span class="text-xs text-gray-400 block font-bold">إجمالي حجوزات اليوم</span>
-                            <span id="statTotalBookings" class="text-2xl font-black text-white">0</span>
+                            <h4 class="font-bold text-sm text-white">تغيير رمز مرور لوحة التحكم (PIN)</h4>
+                            <p class="text-[11px] text-gray-400">الرمز الافتراضي هو <code class="text-brand-blue">a@m@j</code></p>
                         </div>
-                        <i class="fa-solid fa-calendar-check text-3xl text-brand-blue"></i>
                     </div>
-                    <div class="bg-gray-900 p-4 rounded-xl border border-gray-800 flex items-center justify-between">
-                        <div>
-                            <span class="text-xs text-gray-400 block font-bold">الدخل المتوقع اليوم</span>
-                            <span id="statTotalIncome" class="text-2xl font-black text-brand-orange">0 دج</span>
-                        </div>
-                        <i class="fa-solid fa-coins text-3xl text-yellow-500"></i>
+                    <div class="flex items-center gap-2 w-full sm:w-auto">
+                        <input type="password" id="oldPinInput" placeholder="كلمة المرور القديمة" class="bg-gray-800 border border-gray-700 text-xs text-white p-2.5 rounded-lg focus:outline-none">
+                        <input type="password" id="newPinInput" placeholder="كلمة المرور الجديدة" class="bg-gray-800 border border-gray-700 text-xs text-white p-2.5 rounded-lg focus:outline-none">
+                        <button onclick="changeAdminPassword()" class="bg-brand-orange hover:bg-orange-600 text-black font-extrabold text-xs px-4 py-2.5 rounded-lg transition whitespace-nowrap">
+                            تحديث الرمز
+                        </button>
                     </div>
-                    <div class="bg-gray-900 p-4 rounded-xl border border-gray-800 flex items-center justify-between">
-                        <div>
-                            <span class="text-xs text-gray-400 block font-bold">الأجهزة المشغولة حالياً</span>
-                            <span id="statActiveSeats" class="text-2xl font-black text-green-400">0 أجهزة</span>
-                        </div>
-                        <i class="fa-solid fa-desktop text-3xl text-green-500"></i>
+                </div>
+
+                <!-- Financial Analytics Cards -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                    <div class="bg-gray-900 p-4 rounded-xl border border-gray-800">
+                        <span class="text-xs text-gray-400 block font-bold mb-1"><i class="fa-solid fa-calendar-day text-brand-blue ml-1"></i> مداخيل اليوم</span>
+                        <span id="statDailyIncome" class="text-2xl font-black text-white">0 دج</span>
+                        <span id="statTotalBookings" class="text-[10px] text-gray-500 block mt-1">0 حجوزات اليوم</span>
+                    </div>
+                    <div class="bg-gray-900 p-4 rounded-xl border border-gray-800">
+                        <span class="text-xs text-gray-400 block font-bold mb-1"><i class="fa-solid fa-calendar-week text-brand-orange ml-1"></i> مداخيل الأسبوع (7 أيام)</span>
+                        <span id="statWeeklyIncome" class="text-2xl font-black text-brand-orange">0 دج</span>
+                        <span class="text-[10px] text-gray-500 block mt-1">آخر 7 أيام</span>
+                    </div>
+                    <div class="bg-gray-900 p-4 rounded-xl border border-gray-800">
+                        <span class="text-xs text-gray-400 block font-bold mb-1"><i class="fa-solid fa-calendar-days text-purple-400 ml-1"></i> مداخيل الشهر (30 يوم)</span>
+                        <span id="statMonthlyIncome" class="text-2xl font-black text-purple-400">0 دج</span>
+                        <span class="text-[10px] text-gray-500 block mt-1">الشهر الحالي</span>
+                    </div>
+                    <div class="bg-gray-900 p-4 rounded-xl border border-gray-800">
+                        <span class="text-xs text-gray-400 block font-bold mb-1"><i class="fa-solid fa-desktop text-green-400 ml-1"></i> الأجهزة المشغولة حالياً</span>
+                        <span id="statActiveSeats" class="text-2xl font-black text-green-400">0 أجهزة</span>
+                        <span class="text-[10px] text-gray-500 block mt-1">نشط الآن</span>
                     </div>
                 </div>
 
                 <!-- Add Manual Booking Form -->
                 <div class="bg-gray-900 p-4 rounded-xl border border-gray-800 mb-6">
-                    <h4 class="font-bold text-sm text-brand-blue mb-3"><i class="fa-solid fa-plus-circle ml-1"></i> إضافة حجز يدوي سريع (مباشر أو هاتف):</h4>
+                    <h4 class="font-bold text-sm text-brand-blue mb-3"><i class="fa-solid fa-plus-circle ml-1"></i> إضافة حجز يدوي سريع:</h4>
                     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-7 gap-3">
                         <input type="text" id="manualName" placeholder="اسم الزبون" class="bg-gray-800 border border-gray-700 text-xs text-white p-2.5 rounded-lg focus:outline-none">
                         <select id="manualPlatform" onchange="toggleManualInputType()" class="bg-gray-800 border border-gray-700 text-xs text-white p-2.5 rounded-lg focus:outline-none">
@@ -521,7 +510,7 @@
                             <option value="PS4 (2v2)">PS4 (2v2)</option>
                             <option value="كراء PS4 (ليلة)">كراء PS4 (ليلة)</option>
                         </select>
-                        <input type="text" id="manualSeats" placeholder="الأجهزة (مثال: PC #1, PC #2)" class="bg-gray-800 border border-gray-700 text-xs text-white p-2.5 rounded-lg focus:outline-none">
+                        <input type="text" id="manualSeats" placeholder="الأجهزة (مثال: PC #1)" class="bg-gray-800 border border-gray-700 text-xs text-white p-2.5 rounded-lg focus:outline-none">
                         <input type="time" id="manualArrival" value="17:00" class="bg-gray-800 border border-gray-700 text-xs text-white p-2.5 rounded-lg focus:outline-none">
                         <input type="text" id="manualQty" placeholder="المدة / المباريات" class="bg-gray-800 border border-gray-700 text-xs text-white p-2.5 rounded-lg focus:outline-none">
                         <input type="number" id="manualPrice" placeholder="المبلغ (دج)" class="bg-gray-800 border border-gray-700 text-xs text-white p-2.5 rounded-lg focus:outline-none">
@@ -538,16 +527,14 @@
                             <tr>
                                 <th class="p-3">اسم الزبون</th>
                                 <th class="p-3">نوع الخدمة</th>
-                                <th class="p-3">الأجهزة المحجوزة بالضبط</th>
-                                <th class="p-3">وقت الحضور</th>
+                                <th class="p-3">الأجهزة المحجوزة</th>
+                                <th class="p-3">التاريخ والوقت</th>
                                 <th class="p-3">المدة / المباريات</th>
                                 <th class="p-3">المبلغ</th>
                                 <th class="p-3 text-center">إجراء (حذف)</th>
                             </tr>
                         </thead>
-                        <tbody id="adminBookingsTable" class="divide-y divide-gray-800 bg-brand-card">
-                            <!-- Dynamic Table Rows -->
-                        </tbody>
+                        <tbody id="adminBookingsTable" class="divide-y divide-gray-800 bg-brand-card"></tbody>
                     </table>
                 </div>
 
@@ -560,9 +547,8 @@
         <p>© 2026 A@M Game - صالة ألعاب القل، سكيكدة. جميع الحقوق محفوظة.</p>
     </footer>
 
-    <!-- Logic Script with Real Firebase Config -->
+    <!-- Logic Script with Password Update & Firebase Live Sync -->
     <script>
-        // إعدادات مشروعك الحقيقي على Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyBf7TlgpXTV83fFNlyPeRO217KFE_84z_w",
             authDomain: "am-game-collo.firebaseapp.com",
@@ -573,7 +559,6 @@
             measurementId: "G-85CW6XRD3M"
         };
 
-        // تهيئة Firebase
         if (!firebase.apps.length) {
             firebase.initializeApp(firebaseConfig);
         }
@@ -584,11 +569,12 @@
         let selectedSeats = [];
         let bookingsList = [];
 
-        // Encrypted PIN representation for "game zone"
-        const SEC_HASH = "YUBtQGo=";
+        // إدارة كلمة المرور الديناميكية عبر LocalStorage
+        function getAdminPin() {
+            return localStorage.getItem('am_admin_pin') || 'a@m@j';
+        }
 
-        // مزامنة حية لبيانات الحجوزات من السحابة
-        db.collection("bookings").orderBy("id", "desc").onSnapshot((snapshot) => {
+        db.collection("bookings").orderBy("timestamp", "desc").onSnapshot((snapshot) => {
             bookingsList = [];
             snapshot.forEach((doc) => {
                 bookingsList.push({ docId: doc.id, ...doc.data() });
@@ -623,7 +609,6 @@
             } else {
                 document.getElementById('pcSliderContainer').classList.add('hidden');
                 document.getElementById('numberInputContainer').classList.remove('hidden');
-
                 if (platform === 'ps4-night') {
                     document.getElementById('quantityLabel').innerText = '3. عدد الليالي:';
                     document.getElementById('summaryQtyTitle').innerText = 'الليالي:';
@@ -632,7 +617,6 @@
                     document.getElementById('summaryQtyTitle').innerText = 'المباريات:';
                 }
             }
-
             renderSeats();
             calculateTotal();
         }
@@ -681,11 +665,9 @@
                 const minutes = parseInt(document.getElementById('timeSlider').value) || 60;
                 const hours = Math.floor(minutes / 60);
                 const remMins = minutes % 60;
-
                 if (hours > 0 && remMins > 0) qtyText = `${hours} ساعة و ${remMins} دقيقة`;
                 else if (hours > 0) qtyText = `${hours} ساعة`;
                 else qtyText = `${remMins} دقيقة`;
-
                 document.getElementById('timeDisplayBadge').innerText = qtyText;
                 total = (minutes / 60) * currentPrice * (selectedSeats.length || 1);
             } else {
@@ -719,6 +701,9 @@
             const totalStr = document.getElementById('summaryTotal').innerText;
             const priceNum = parseInt(totalStr.replace(/[^0-9]/g, '')) || 0;
 
+            const now = new Date();
+            const dateStr = now.toISOString().split('T')[0];
+
             const newBooking = {
                 id: Date.now(),
                 name: customer,
@@ -728,23 +713,22 @@
                 qty: qtyText,
                 price: totalStr,
                 priceNum: priceNum,
-                seatsCount: selectedSeats.length || 1
+                seatsCount: selectedSeats.length || 1,
+                date: dateStr,
+                timestamp: firebase.firestore.FieldValue.serverTimestamp()
             };
 
-            // حفظ الحجز في السحابة فوراً لتظهر في لوحة الإدارة
             db.collection("bookings").add(newBooking).catch((err) => {
                 console.error("خطأ في الحفظ السحابي:", err);
             });
 
-            // رسالة الواتساب الموجهة للفريق
             const text = `${customer}: لقد حجزت مكاناً، الرجاء الاطلاع على الحجوزات.%0A- نوع الخدمة: ${platformLabel}%0A- الأجهزة المحجوزة بالضبط: ${sortedSeats}%0A- وقت الوصول المتوقع: ${arrival}%0A- المدة / الكمية: ${qtyText}%0A- المبلغ الإجمالي: ${totalStr}`;
             window.open(`https://wa.me/213${phone.substring(1)}?text=${text}`, '_blank');
         }
 
-        // Admin Security & Functions
         function unlockAdmin() {
             const pin = prompt("أدخل رمز المرور الخاص بالمالكين والعامل:");
-            if (pin && btoa(pin) === SEC_HASH) {
+            if (pin === getAdminPin()) {
                 document.getElementById('adminPanel').classList.remove('hidden');
                 document.getElementById('adminLoginBtn').classList.add('hidden');
                 renderAdminTable();
@@ -758,28 +742,65 @@
             document.getElementById('adminLoginBtn').classList.remove('hidden');
         }
 
+        function changeAdminPassword() {
+            const oldPin = document.getElementById('oldPinInput').value;
+            const newPin = document.getElementById('newPinInput').value;
+
+            if (oldPin !== getAdminPin()) {
+                alert("كلمة المرور القديمة غير صحيحة!");
+                return;
+            }
+            if (!newPin || newPin.length < 3) {
+                alert("يرجى إدخال كلمة مرور جديدة صالحة (أكثر من 3 خانات).");
+                return;
+            }
+
+            localStorage.setItem('am_admin_pin', newPin);
+            alert("تم تحديث كلمة المرور بنجاح! احتفظ بها في مكان آمن.");
+            document.getElementById('oldPinInput').value = '';
+            document.getElementById('newPinInput').value = '';
+        }
+
         function toggleManualInputType() {
             const val = document.getElementById('manualPlatform').value;
             const qtyInput = document.getElementById('manualQty');
-            if (val.includes('PC')) {
-                qtyInput.placeholder = 'المدة (مثال: 2 ساعتان)';
-            } else if (val.includes('ليلة')) {
-                qtyInput.placeholder = 'عدد الليالي (مثال: 1 ليلة)';
-            } else {
-                qtyInput.placeholder = 'عدد المباريات (مثال: 3 مباريات)';
-            }
+            if (val.includes('PC')) qtyInput.placeholder = 'المدة (مثال: 2 ساعتان)';
+            else if (val.includes('ليلة')) qtyInput.placeholder = 'عدد الليالي';
+            else qtyInput.placeholder = 'عدد المباريات';
         }
 
         function renderAdminTable() {
             const tbody = document.getElementById('adminBookingsTable');
             tbody.innerHTML = '';
 
-            let totalIncome = 0;
+            let dailyIncome = 0;
+            let weeklyIncome = 0;
+            let monthlyIncome = 0;
             let totalSeats = 0;
+            let dailyCount = 0;
+
+            const now = new Date();
+            const todayStr = now.toISOString().split('T')[0];
+            const sevenDaysAgo = new Date();
+            sevenDaysAgo.setDate(now.getDate() - 7);
+            const thirtyDaysAgo = new Date();
+            thirtyDaysAgo.setDate(now.getDate() - 30);
 
             bookingsList.forEach((item) => {
-                totalIncome += item.priceNum || 0;
+                const price = item.priceNum || 0;
                 totalSeats += item.seatsCount || 1;
+                let itemDate = item.date ? new Date(item.date) : new Date();
+
+                if (item.date === todayStr) {
+                    dailyIncome += price;
+                    dailyCount++;
+                }
+                if (itemDate >= sevenDaysAgo) {
+                    weeklyIncome += price;
+                }
+                if (itemDate >= thirtyDaysAgo) {
+                    monthlyIncome += price;
+                }
 
                 const tr = document.createElement('tr');
                 tr.className = 'hover:bg-gray-900/50 transition';
@@ -787,7 +808,7 @@
                     <td class="p-3 font-bold text-white">${item.name}</td>
                     <td class="p-3 text-brand-blue">${item.platform}</td>
                     <td class="p-3 font-mono text-xs text-brand-orange">${item.seats}</td>
-                    <td class="p-3 font-bold text-yellow-400">${item.arrival}</td>
+                    <td class="p-3 font-bold text-yellow-400">${item.date || 'اليوم'} (${item.arrival})</td>
                     <td class="p-3 text-gray-300">${item.qty}</td>
                     <td class="p-3 font-bold text-green-400">${item.price}</td>
                     <td class="p-3 text-center">
@@ -799,13 +820,15 @@
                 tbody.appendChild(tr);
             });
 
-            document.getElementById('statTotalBookings').innerText = bookingsList.length;
-            document.getElementById('statTotalIncome').innerText = `${totalIncome} دج`;
+            document.getElementById('statDailyIncome').innerText = `${dailyIncome} دج`;
+            document.getElementById('statTotalBookings').innerText = `${dailyCount} حجوزات اليوم`;
+            document.getElementById('statWeeklyIncome').innerText = `${weeklyIncome} دج`;
+            document.getElementById('statMonthlyIncome').innerText = `${monthlyIncome} دج`;
             document.getElementById('statActiveSeats').innerText = `${totalSeats} أجهزة`;
         }
 
         function deleteBooking(docId) {
-            if (confirm("هل أنت متأكد من حذف هذا الحجز من الجدول؟")) {
+            if (confirm("هل أنت متأكد من حذف هذا الحجز؟")) {
                 if (docId) {
                     db.collection("bookings").doc(docId).delete().catch(err => console.error(err));
                 }
@@ -813,7 +836,7 @@
         }
 
         function clearAllBookings() {
-            if (confirm("هل تريد إفراغ جدول الحجوزات بالكامل لبداية يوم جديد؟")) {
+            if (confirm("هل تريد إفراغ سجل الحجوزات بالكامل؟")) {
                 bookingsList.forEach(item => {
                     if (item.docId) {
                         db.collection("bookings").doc(item.docId).delete();
@@ -837,16 +860,14 @@
             if (inputPrice !== '' && !isNaN(parseInt(inputPrice))) {
                 computedPrice = parseInt(inputPrice);
             } else {
-                if (platform.includes('PC')) {
-                    computedPrice = qtyNum * 100 * seatsNum;
-                } else if (platform.includes('1v1')) {
-                    computedPrice = qtyNum * 50 * seatsNum;
-                } else if (platform.includes('2v2')) {
-                    computedPrice = qtyNum * 80 * seatsNum;
-                } else if (platform.includes('ليلة')) {
-                    computedPrice = qtyNum * 600 * seatsNum;
-                }
+                if (platform.includes('PC')) computedPrice = qtyNum * 100 * seatsNum;
+                else if (platform.includes('1v1')) computedPrice = qtyNum * 50 * seatsNum;
+                else if (platform.includes('2v2')) computedPrice = qtyNum * 80 * seatsNum;
+                else if (platform.includes('ليلة')) computedPrice = qtyNum * 600 * seatsNum;
             }
+
+            const now = new Date();
+            const dateStr = now.toISOString().split('T')[0];
 
             const newBooking = {
                 id: Date.now(),
@@ -854,10 +875,12 @@
                 platform: platform,
                 seats: seats,
                 arrival: arrival,
-                qty: qty.includes('ساعة') || qty.includes('مباراة') || qty.includes('ليلة') ? qty : `${qtyNum} (مباريات/ساعات)`,
+                qty: qty,
                 price: `${computedPrice} دج`,
                 priceNum: computedPrice,
-                seatsCount: seatsNum
+                seatsCount: seatsNum,
+                date: dateStr,
+                timestamp: firebase.firestore.FieldValue.serverTimestamp()
             };
 
             db.collection("bookings").add(newBooking).catch(err => console.error(err));
@@ -868,7 +891,6 @@
             document.getElementById('manualPrice').value = '';
         }
 
-        // Initialize
         setPlatform('pc', 100);
     </script>
 </body>
