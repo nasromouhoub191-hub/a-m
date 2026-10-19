@@ -19,8 +19,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
     
     <!-- Firebase App & Firestore SDKs -->
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore-compat.js"></script>
 
     <script>
         tailwind.config = {
@@ -67,6 +68,13 @@
             font-weight: bold;
             box-shadow: 0 0 15px #00f0ff;
         }
+        .seat-btn.booked {
+            background-color: #ef4444 !important;
+            color: #ffffff !important;
+            border-color: #dc2626 !important;
+            cursor: not-allowed;
+            opacity: 0.8;
+        }
         input[type=range] {
             accent-color: #00f0ff;
         }
@@ -83,6 +91,12 @@
     </style>
 </head>
 <body class="bg-brand-dark text-gray-100 min-h-screen flex flex-col justify-between">
+
+    <!-- Toast Notification Overlay -->
+    <div id="toastNotification" class="fixed top-5 left-1/2 -translate-x-1/2 z-[200] hidden bg-brand-card border border-brand-blue/50 text-white px-6 py-3 rounded-2xl shadow-[0_0_25px_rgba(0,240,255,0.4)] text-sm font-bold flex items-center gap-3 transition-all">
+        <i id="toastIcon" class="fa-solid fa-circle-check text-brand-blue text-lg"></i>
+        <span id="toastMessage">تمت العملية بنجاح</span>
+    </div>
 
     <!-- Welcome Modal / QR Scan Landing Screen -->
     <div id="welcomeModal" class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/90 backdrop-blur-md transition-opacity duration-300">
@@ -147,6 +161,7 @@
                 <a href="#rules" class="hover:text-brand-orange transition">قوانين الصالة</a>
                 <a href="#features" class="hover:text-brand-blue transition">التكييف والمراقبة</a>
                 <a href="#booking" class="hover:text-brand-orange transition">نظام الحجز</a>
+                <a href="#adminSection" class="hover:text-brand-blue transition">لوحة الإدارة</a>
                 <a href="#team" class="hover:text-brand-blue transition">فريق العمل</a>
             </nav>
 
@@ -381,13 +396,13 @@
 
             <!-- Confirm / Send via WhatsApp Buttons -->
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                <button onclick="sendWhatsApp('0559935670')" class="bg-green-600 hover:bg-green-500 text-white font-extrabold py-3 px-3 rounded-xl transition text-xs flex items-center justify-center gap-2 shadow-lg">
+                <button onclick="confirmAndSendWhatsApp('0559935670')" class="bg-green-600 hover:bg-green-500 text-white font-extrabold py-3 px-3 rounded-xl transition text-xs flex items-center justify-center gap-2 shadow-lg">
                     <i class="fa-brands fa-whatsapp text-base"></i> إرسال إلى جاليـل
                 </button>
-                <button onclick="sendWhatsApp('0556751958')" class="bg-green-700 hover:bg-green-600 text-white font-extrabold py-3 px-3 rounded-xl transition text-xs flex items-center justify-center gap-2 shadow-lg">
+                <button onclick="confirmAndSendWhatsApp('0556751958')" class="bg-green-700 hover:bg-green-600 text-white font-extrabold py-3 px-3 rounded-xl transition text-xs flex items-center justify-center gap-2 shadow-lg">
                     <i class="fa-brands fa-whatsapp text-base"></i> إرسال إلى مهـدي
                 </button>
-                <button onclick="sendWhatsApp('0782890923')" class="bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold py-3 px-3 rounded-xl transition text-xs flex items-center justify-center gap-2 shadow-lg">
+                <button onclick="confirmAndSendWhatsApp('0782890923')" class="bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold py-3 px-3 rounded-xl transition text-xs flex items-center justify-center gap-2 shadow-lg">
                     <i class="fa-brands fa-whatsapp text-base"></i> إرسال إلى علاء
                 </button>
             </div>
@@ -397,6 +412,23 @@
     <!-- SECTION: Admin Dashboard (A@M Admin) -->
     <section id="adminSection" class="py-12 px-4 max-w-6xl mx-auto w-full border-t border-gray-800">
         <div class="bg-brand-card p-6 md:p-8 rounded-3xl border border-brand-orange/40 shadow-2xl relative overflow-hidden">
+            
+            <!-- Admin Lock Overlay (Visible when locked) -->
+            <div id="adminLockOverlay" class="absolute inset-0 z-50 bg-black/95 backdrop-blur-md flex flex-col items-center justify-center p-6 text-center">
+                <div class="w-16 h-16 bg-brand-orange/20 border border-brand-orange text-brand-orange rounded-2xl flex items-center justify-center text-3xl mb-4 shadow-[0_0_20px_rgba(255,102,0,0.3)]">
+                    <i class="fa-solid fa-lock"></i>
+                </div>
+                <h3 class="text-2xl font-black text-white mb-2">لوحة الإدارة مقفولة</h3>
+                <p class="text-gray-400 text-xs mb-1 max-w-xs">يرجى إدخال رمز المرور للوصول إلى المداخيل والسجلات وإدارة الأجهزة</p>
+                <span class="text-brand-orange font-bold text-xs bg-brand-orange/10 px-3 py-1 rounded-full border border-brand-orange/30 mb-5">كلمة السر الافتراضية: 123456</span>
+                <div class="w-full max-w-xs flex flex-col gap-3">
+                    <input type="password" id="adminLockInput" placeholder="أدخل كلمة المرور (الافتراضية: 123456)" class="w-full bg-gray-900 border border-gray-700 rounded-xl p-3 text-center text-white text-sm focus:border-brand-orange outline-none font-bold">
+                    <button onclick="unlockAdminPanel()" class="w-full bg-brand-orange text-black font-extrabold py-3 rounded-xl hover:opacity-90 transition text-sm shadow-lg">
+                        فتح لوحة التحكم
+                    </button>
+                </div>
+            </div>
+
             <!-- Header & Lock controls -->
             <div class="flex flex-wrap items-center justify-between gap-4 mb-6 border-b border-gray-800 pb-4">
                 <div>
@@ -419,7 +451,7 @@
             <div class="bg-gray-900/80 p-4 rounded-2xl border border-gray-800 mb-6 flex flex-wrap items-center justify-between gap-3">
                 <div class="flex items-center gap-2 text-xs font-bold text-gray-300">
                     <i class="fa-solid fa-key text-brand-orange text-base"></i>
-                    <span>تغيير رمز مرور لوحة التحكم (متزامن سحابياً)</span>
+                    <span>تغيير رمز مرور لوحة التحكم (الافتراضي: <strong>123456</strong>)</span>
                 </div>
                 <div class="flex flex-wrap items-center gap-2 w-full md:w-auto">
                     <input type="password" id="oldAdminPass" placeholder="كلمة المرور القديمة" class="bg-gray-900 border border-gray-700 rounded-xl px-3 py-1.5 text-xs text-white focus:border-brand-blue outline-none flex-1 md:w-36">
@@ -571,7 +603,7 @@
         </div>
     </section>
 
-    <!-- Map & GPS Section (Fixed opening behavior) -->
+    <!-- Map & GPS Section -->
     <section class="py-12 px-4 bg-brand-card/50 border-t border-gray-800">
         <div class="max-w-5xl mx-auto text-center">
             <h2 class="text-2xl md:text-3xl font-black text-brand-blue neon-text-blue mb-2">موقع الصالة على الخريطة (GPS)</h2>
@@ -597,12 +629,71 @@
         <p>© 2026 A@M Game Lounge - القل، سكيكدة. جميع الحقوق محفوظة | صانع التطبيق: <span class="text-brand-blue font-bold">Nasro Mhb</span></p>
     </footer>
 
-    <!-- Interactive JavaScript Logic -->
     <script>
+        // --- Firebase Firestore Initialization ---
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'am-game-app';
+        let db = null;
+        let auth = null;
+        let currentUser = null;
+
+        // Firebase Fallback / Initializer
+        if (typeof __firebase_config !== 'undefined') {
+            try {
+                const firebaseConfig = JSON.parse(__firebase_config);
+                const app = firebase.initializeApp(firebaseConfig);
+                db = firebase.firestore();
+                auth = firebase.auth();
+                
+                // Anonymous auth for secure Firestore queries
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    auth.signInWithCustomToken(__initial_auth_token).then(res => {
+                        currentUser = res.user;
+                        initFirestoreListeners();
+                    }).catch(() => {
+                        auth.signInAnonymously().then(res => {
+                            currentUser = res.user;
+                            initFirestoreListeners();
+                        });
+                    });
+                } else {
+                    auth.signInAnonymously().then(res => {
+                        currentUser = res.user;
+                        initFirestoreListeners();
+                    });
+                }
+            } catch(e) {
+                console.error("Firebase init fallback error:", e);
+            }
+        }
+
         let currentPlatform = 'pc';
         let currentPrice = 100;
         let selectedSeats = [];
+        let bookedSeatsList = [];
         let adminBookings = JSON.parse(localStorage.getItem('aMAdminBookings') || '[]');
+        let currentAdminPassword = localStorage.getItem('aMAdminPass') || '123456';
+
+        function showToast(msg, isError = false) {
+            const toast = document.getElementById('toastNotification');
+            const toastMsg = document.getElementById('toastMessage');
+            const toastIcon = document.getElementById('toastIcon');
+
+            toastMsg.innerText = msg;
+            if(isError) {
+                toast.classList.remove('border-brand-blue/50');
+                toast.classList.add('border-red-500/50');
+                toastIcon.className = 'fa-solid fa-circle-xmark text-red-500 text-lg';
+            } else {
+                toast.classList.remove('border-red-500/50');
+                toast.classList.add('border-brand-blue/50');
+                toastIcon.className = 'fa-solid fa-circle-check text-brand-blue text-lg';
+            }
+
+            toast.classList.remove('hidden');
+            setTimeout(() => {
+                toast.classList.add('hidden');
+            }, 3500);
+        }
 
         function closeWelcomeModal() {
             document.getElementById('welcomeModal').classList.add('opacity-0', 'pointer-events-none');
@@ -612,7 +703,77 @@
         }
 
         function triggerInstall() {
-            alert('انقر على خيارات المتصفح وحُدّد "إضافة إلى الشاشة الرئيسية" (Add to Home Screen)');
+            showToast('انقر على خيارات المتصفح ثم "إضافة إلى الشاشة الرئيسية"');
+        }
+
+        // --- Realtime Cloud Synchronization ---
+        function initFirestoreListeners() {
+            if(!db) return;
+            const publicCol = db.collection('artifacts').doc(appId).collection('public').doc('data').collection('bookings');
+            
+            publicCol.onSnapshot((snapshot) => {
+                let cloudBookings = [];
+                let newBookedSeats = [];
+
+                snapshot.forEach(doc => {
+                    const data = doc.data();
+                    cloudBookings.push({ id: doc.id, ...data });
+                    
+                    // Collect active seats
+                    if (data.seats && Array.isArray(data.seats)) {
+                        newBookedSeats.push(...data.seats);
+                    } else if (data.seats && typeof data.seats === 'string') {
+                        data.seats.split(',').forEach(s => newBookedSeats.push(s.trim()));
+                    }
+                });
+
+                if(cloudBookings.length > 0) {
+                    adminBookings = cloudBookings;
+                    localStorage.setItem('aMAdminBookings', JSON.stringify(adminBookings));
+                }
+                bookedSeatsList = newBookedSeats;
+
+                renderAdminTable();
+                renderSeats();
+            }, (err) => {
+                console.error("Firestore sync error:", err);
+            });
+        }
+
+        function lockAdminPanel() {
+            document.getElementById('adminLockOverlay').style.display = 'flex';
+            document.getElementById('adminLockInput').value = '';
+            showToast('تم قفل اللوحة بنجاح');
+        }
+
+        function unlockAdminPanel() {
+            const inputPass = document.getElementById('adminLockInput').value;
+            if(inputPass === currentAdminPassword) {
+                document.getElementById('adminLockOverlay').style.display = 'none';
+                showToast('تم فتح لوحة التحكم بنجاح');
+            } else {
+                showToast('كلمة المرور غير صحيحة!', true);
+            }
+        }
+
+        function updateAdminPassword() {
+            const oldPass = document.getElementById('oldAdminPass').value;
+            const newPass = document.getElementById('newAdminPass').value;
+
+            if(oldPass !== currentAdminPassword) {
+                showToast('كلمة المرور القديمة غير صحيحة!', true);
+                return;
+            }
+
+            if(newPass && newPass.length >= 4) {
+                currentAdminPassword = newPass;
+                localStorage.setItem('aMAdminPass', newPass);
+                showToast('تم تحديث كلمة المرور بنجاح');
+                document.getElementById('oldAdminPass').value = '';
+                document.getElementById('newAdminPass').value = '';
+            } else {
+                showToast('يرجى كتابة رمز مرور جديد من 4 أرقام على الأقل', true);
+            }
         }
 
         function renderAdminTable() {
@@ -627,23 +788,25 @@
             const now = new Date().toLocaleDateString('ar-DZ');
 
             adminBookings.forEach((b, index) => {
-                totalSum += b.amount;
+                totalSum += parseInt(b.amount || 0);
                 if(b.date === now) {
-                    todaySum += b.amount;
+                    todaySum += parseInt(b.amount || 0);
                     todayCount++;
                 }
+
+                const seatsText = Array.isArray(b.seats) ? b.seats.join(', ') : (b.seats || 'غير محدد');
 
                 const tr = document.createElement('tr');
                 tr.className = 'hover:bg-gray-900/50 transition';
                 tr.innerHTML = `
-                    <td class="p-3 font-bold text-white">${b.name}</td>
-                    <td class="p-3 text-gray-300">${b.platform}</td>
-                    <td class="p-3 text-brand-blue">${b.seats}</td>
-                    <td class="p-3 text-gray-400">${b.date} ${b.time}</td>
-                    <td class="p-3 text-gray-300">${b.duration}</td>
-                    <td class="p-3 font-black text-brand-orange">${b.amount} دج</td>
+                    <td class="p-3 font-bold text-white">${b.name || 'زبون'}</td>
+                    <td class="p-3 text-gray-300">${b.platform || ''}</td>
+                    <td class="p-3 text-brand-blue">${seatsText}</td>
+                    <td class="p-3 text-gray-400">${b.date || ''} ${b.time || ''}</td>
+                    <td class="p-3 text-gray-300">${b.duration || b.qty || '1'}</td>
+                    <td class="p-3 font-black text-brand-orange">${b.amount || 0} دج</td>
                     <td class="p-3 text-center">
-                        <button onclick="deleteBooking(${index})" class="text-red-400 hover:text-red-300 p-1">
+                        <button onclick="deleteBooking('${b.id}', ${index})" class="text-red-400 hover:text-red-300 p-1">
                             <i class="fa-solid fa-trash"></i>
                         </button>
                     </td>
@@ -655,29 +818,41 @@
             document.getElementById('statTodayCount').innerText = `${todayCount} حجوزات اليوم`;
             document.getElementById('statWeek').innerText = `${totalSum} دج`;
             document.getElementById('statMonth').innerText = `${totalSum} دج`;
-            document.getElementById('statActive').innerText = `${todayCount} أجهزة`;
+            document.getElementById('statActive').innerText = `${bookedSeatsList.length} أجهزة`;
         }
 
-        function addManualBooking() {
+        async function addManualBooking() {
             const name = document.getElementById('manualName').value.trim() || 'زبون';
             const platform = document.getElementById('manualPlatform').value;
-            const seats = document.getElementById('manualSeats').value.trim() || 'غير محدد';
+            const seatsStr = document.getElementById('manualSeats').value.trim() || 'غير محدد';
             const duration = document.getElementById('manualDuration').value.trim() || '1';
             const amount = parseInt(document.getElementById('manualAmount').value) || 0;
 
             const newBooking = {
                 name,
                 platform,
-                seats,
+                seats: seatsStr.split(','),
                 duration,
                 amount,
                 date: new Date().toLocaleDateString('ar-DZ'),
                 time: new Date().toLocaleTimeString('ar-DZ', { hour: '2-digit', minute: '2-digit' })
             };
 
-            adminBookings.unshift(newBooking);
-            localStorage.setItem('aMAdminBookings', JSON.stringify(adminBookings));
-            renderAdminTable();
+            if (db) {
+                try {
+                    await db.collection('artifacts').doc(appId).collection('public').doc('data').collection('bookings').add(newBooking);
+                    showToast('تمت إضافة الحجز ومزامنة البيانات سحابياً');
+                } catch(e) {
+                    console.error("Error adding doc: ", e);
+                    adminBookings.unshift(newBooking);
+                    localStorage.setItem('aMAdminBookings', JSON.stringify(adminBookings));
+                    renderAdminTable();
+                }
+            } else {
+                adminBookings.unshift(newBooking);
+                localStorage.setItem('aMAdminBookings', JSON.stringify(adminBookings));
+                renderAdminTable();
+            }
 
             document.getElementById('manualName').value = '';
             document.getElementById('manualSeats').value = '';
@@ -685,31 +860,37 @@
             document.getElementById('manualAmount').value = '';
         }
 
-        function deleteBooking(index) {
-            adminBookings.splice(index, 1);
-            localStorage.setItem('aMAdminBookings', JSON.stringify(adminBookings));
-            renderAdminTable();
-        }
-
-        function clearAdminLogs() {
-            if(confirm('هل أنت تأكد من تفريغ كافة سجلات الحجوزات والمداخيل؟')) {
-                adminBookings = [];
+        async function deleteBooking(docId, index) {
+            if (db && docId) {
+                try {
+                    await db.collection('artifacts').doc(appId).collection('public').doc('data').collection('bookings').doc(docId).delete();
+                    showToast('تم حذف الحجز سحابياً بنجاح');
+                } catch(e) {
+                    console.error("Delete error:", e);
+                }
+            } else {
+                adminBookings.splice(index, 1);
                 localStorage.setItem('aMAdminBookings', JSON.stringify(adminBookings));
                 renderAdminTable();
+                showToast('تم حذف الحجز محلياً');
             }
         }
 
-        function lockAdminPanel() {
-            alert('تم قفل اللوحة بنجاح.');
-        }
-
-        function updateAdminPassword() {
-            const newPass = document.getElementById('newAdminPass').value;
-            if(newPass) {
-                alert('تم تحديث كلمة المرور بنجاح.');
-                document.getElementById('oldAdminPass').value = '';
-                document.getElementById('newAdminPass').value = '';
+        async function clearAdminLogs() {
+            if(db) {
+                try {
+                    const snapshot = await db.collection('artifacts').doc(appId).collection('public').doc('data').collection('bookings').get();
+                    const batch = db.batch();
+                    snapshot.forEach(doc => batch.delete(doc.ref));
+                    await batch.commit();
+                    showToast('تم مسح كافة السجلات السحابية بنجاح');
+                } catch(e) {
+                    console.error(e);
+                }
             }
+            adminBookings = [];
+            localStorage.setItem('aMAdminBookings', JSON.stringify(adminBookings));
+            renderAdminTable();
         }
 
         function setPlatform(platform, price) {
@@ -758,21 +939,29 @@
 
         function renderSeats() {
             const grid = document.getElementById('seatsGrid');
+            if(!grid) return;
             grid.innerHTML = '';
             const count = currentPlatform === 'pc' ? 10 : 6;
             const prefix = currentPlatform === 'pc' ? 'PC #' : 'PS4 #';
 
             for (let i = 1; i <= count; i++) {
                 const seatName = `${prefix}${i}`;
+                const isBooked = bookedSeatsList.includes(seatName);
+
                 const btn = document.createElement('button');
                 btn.className = 'seat-btn p-2.5 rounded-xl text-xs font-bold border border-gray-700 bg-gray-900 hover:border-brand-blue transition text-center';
-                btn.innerText = seatName;
+                btn.innerText = isBooked ? `${seatName} (محجوز)` : seatName;
                 
-                if (selectedSeats.includes(seatName)) {
+                if (isBooked) {
+                    btn.classList.add('booked');
+                    btn.disabled = true;
+                } else if (selectedSeats.includes(seatName)) {
                     btn.classList.add('selected');
                 }
 
-                btn.onclick = () => toggleSeat(seatName, btn);
+                if(!isBooked) {
+                    btn.onclick = () => toggleSeat(seatName, btn);
+                }
                 grid.appendChild(btn);
             }
         }
@@ -836,15 +1025,46 @@
             document.getElementById('summaryTotal').innerText = `${total} دج`;
         }
 
-        function sendWhatsApp(phone) {
+        async function confirmAndSendWhatsApp(phone) {
             const customerName = document.getElementById('summaryCustomer').innerText;
             const platform = document.getElementById('summaryPlatform').innerText;
-            const seats = document.getElementById('summarySeats').innerText;
+            const seatsText = document.getElementById('summarySeats').innerText;
             const qty = document.getElementById('summaryQty').innerText;
             const arrival = document.getElementById('summaryArrival').innerText;
-            const total = document.getElementById('summaryTotal').innerText;
+            const totalText = document.getElementById('summaryTotal').innerText;
 
-            const message = `السلام عليكم، طلب حجز جديد في صالة A@M Game بالقل:%0A- الاسم: ${customerName}%0A- الخدمة: ${platform}%0A- الأجهزة: ${seats}%0A- المدة/المباريات: ${qty}%0A- وقت الوصول المتوقع: ${arrival}%0A- الإجمالي: ${total}`;
+            if(selectedSeats.length === 0 && currentPlatform !== 'ps4-night') {
+                showToast('يرجى اختيار جهاز واحد على الأقل قبل إرسال الحجز!', true);
+                return;
+            }
+
+            const amountValue = parseInt(totalText.replace(/\D/g, '')) || 0;
+
+            const bookingData = {
+                name: customerName,
+                platform: platform,
+                seats: selectedSeats.length > 0 ? selectedSeats : [seatsText],
+                duration: qty,
+                amount: amountValue,
+                time: arrival,
+                date: new Date().toLocaleDateString('ar-DZ')
+            };
+
+            // Save to Firestore so it reflects on all devices
+            if (db) {
+                try {
+                    await db.collection('artifacts').doc(appId).collection('public').doc('data').collection('bookings').add(bookingData);
+                    showToast('تم تسجيل الحجز في النظام وإعادة توجيهك للواتساب...');
+                } catch(e) {
+                    console.error("Cloud save error:", e);
+                }
+            } else {
+                adminBookings.unshift(bookingData);
+                localStorage.setItem('aMAdminBookings', JSON.stringify(adminBookings));
+                renderAdminTable();
+            }
+
+            const message = `السلام عليكم، طلب حجز جديد في صالة A@M Game بالقل:%0A- الاسم: ${customerName}%0A- الخدمة: ${platform}%0A- الأجهزة: ${seatsText}%0A- المدة/المباريات: ${qty}%0A- وقت الوصول المتوقع: ${arrival}%0A- الإجمالي: ${totalText}`;
 
             window.open(`https://wa.me/213${phone.substring(1)}?text=${message}`, '_blank');
         }
