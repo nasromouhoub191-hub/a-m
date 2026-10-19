@@ -10,6 +10,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts: Cairo -->
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    
+    <!-- Firebase App & Firestore SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 
     <script>
         tailwind.config = {
@@ -354,7 +358,7 @@
                         <h3 class="text-2xl font-black text-brand-orange flex items-center gap-2">
                             <i class="fa-solid fa-sliders"></i> جدول الحجوزات اليومي (A@M Admin)
                         </h3>
-                        <p class="text-xs text-gray-400 mt-1">متابعة الحجوزات اليومية وإدارة الأجهزة والمداخيل مباشرة</p>
+                        <p class="text-xs text-gray-400 mt-1">متابعة الحجوزات اليومية وإدارة الأجهزة والمداخيل مباشرة (متصل سحابياً بلحظتها)</p>
                     </div>
                     <div class="flex items-center gap-2">
                         <button onclick="clearAllBookings()" class="bg-red-900/30 hover:bg-red-900/60 text-red-400 border border-red-800 text-xs px-3 py-2 rounded-xl transition font-bold">
@@ -371,27 +375,27 @@
                     <div class="bg-gray-900 p-4 rounded-xl border border-gray-800 flex items-center justify-between">
                         <div>
                             <span class="text-xs text-gray-400 block font-bold">إجمالي حجوزات اليوم</span>
-                            <span id="statTotalBookings" class="text-2xl font-black text-white">1</span>
+                            <span id="statTotalBookings" class="text-2xl font-black text-white">0</span>
                         </div>
                         <i class="fa-solid fa-calendar-check text-3xl text-brand-blue"></i>
                     </div>
                     <div class="bg-gray-900 p-4 rounded-xl border border-gray-800 flex items-center justify-between">
                         <div>
                             <span class="text-xs text-gray-400 block font-bold">الدخل المتوقع اليوم</span>
-                            <span id="statTotalIncome" class="text-2xl font-black text-brand-orange">1000 دج</span>
+                            <span id="statTotalIncome" class="text-2xl font-black text-brand-orange">0 دج</span>
                         </div>
                         <i class="fa-solid fa-coins text-3xl text-yellow-500"></i>
                     </div>
                     <div class="bg-gray-900 p-4 rounded-xl border border-gray-800 flex items-center justify-between">
                         <div>
                             <span class="text-xs text-gray-400 block font-bold">الأجهزة المشغولة حالياً</span>
-                            <span id="statActiveSeats" class="text-2xl font-black text-green-400">5 أجهزة</span>
+                            <span id="statActiveSeats" class="text-2xl font-black text-green-400">0 أجهزة</span>
                         </div>
                         <i class="fa-solid fa-desktop text-3xl text-green-500"></i>
                     </div>
                 </div>
 
-                <!-- Add Manual Booking Form with Price Field -->
+                <!-- Add Manual Booking Form -->
                 <div class="bg-gray-900 p-4 rounded-xl border border-gray-800 mb-6">
                     <h4 class="font-bold text-sm text-brand-blue mb-3"><i class="fa-solid fa-plus-circle ml-1"></i> إضافة حجز يدوي سريع (مباشر أو هاتف):</h4>
                     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-7 gap-3">
@@ -441,19 +445,43 @@
         <p>© 2026 A@M Game - صالة ألعاب القل، سكيكدة. جميع الحقوق محفوظة.</p>
     </footer>
 
-    <!-- Logic Script -->
+    <!-- Logic Script with Real Firebase Config -->
     <script>
+        // إعدادات مشروعك الحقيقي على Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyBf7TlgpXTV83fFNlyPeRO217KFE_84z_w",
+            authDomain: "am-game-collo.firebaseapp.com",
+            projectId: "am-game-collo",
+            storageBucket: "am-game-collo.firebasestorage.app",
+            messagingSenderId: "297005432724",
+            appId: "1:297005432724:web:7bba5f83696b2992309981",
+            measurementId: "G-85CW6XRD3M"
+        };
+
+        // تهيئة Firebase
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        const db = firebase.firestore();
+
         let currentPlatform = 'pc';
         let currentPrice = 100;
         let selectedSeats = [];
+        let bookingsList = [];
 
         // Encrypted PIN representation for "a@m@j"
         const SEC_HASH = "YUBtQGo=";
 
-        // Initial bookings array
-        let bookingsList = JSON.parse(localStorage.getItem('am_game_bookings')) || [
-            { id: 1, name: 'حسام وأصدقاؤه', platform: 'CS 1.6 (PC)', seats: 'PC #1, PC #2, PC #3, PC #4, PC #5', arrival: '16:30', qty: '2 ساعتان', price: '1000 دج', priceNum: 1000, seatsCount: 5 }
-        ];
+        // مزامنة حية لبيانات الحجوزات من السحابة
+        db.collection("bookings").orderBy("id", "desc").onSnapshot((snapshot) => {
+            bookingsList = [];
+            snapshot.forEach((doc) => {
+                bookingsList.push({ docId: doc.id, ...doc.data() });
+            });
+            renderAdminTable();
+        }, (error) => {
+            console.log("خطأ في الاتصال السحابي:", error);
+        });
 
         function closeWelcomeModal() {
             document.getElementById('welcomeModal').classList.add('opacity-0', 'pointer-events-none');
@@ -467,7 +495,6 @@
             currentPrice = price;
             selectedSeats = [];
 
-            // UI Highlights
             document.getElementById('btn-pc').className = platform === 'pc' ? 'p-3 rounded-xl border-2 border-brand-blue bg-gray-800 font-bold text-center' : 'p-3 rounded-xl border border-gray-700 bg-gray-900 font-bold text-center';
             document.getElementById('btn-ps4-1').className = platform === 'ps4-1v1' ? 'p-3 rounded-xl border-2 border-brand-orange bg-gray-800 font-bold text-center' : 'p-3 rounded-xl border border-gray-700 bg-gray-900 font-bold text-center';
             document.getElementById('btn-ps4-2').className = platform === 'ps4-2v2' ? 'p-3 rounded-xl border-2 border-brand-blue bg-gray-800 font-bold text-center' : 'p-3 rounded-xl border border-gray-700 bg-gray-900 font-bold text-center';
@@ -589,10 +616,12 @@
                 seatsCount: selectedSeats.length || 1
             };
 
-            bookingsList.push(newBooking);
-            saveAndRenderBookings();
+            // حفظ الحجز في السحابة فوراً لتظهر في لوحة الإدارة
+            db.collection("bookings").add(newBooking).catch((err) => {
+                console.error("خطأ في الحفظ السحابي:", err);
+            });
 
-            // Updated WhatsApp message format
+            // رسالة الواتساب الموجهة للفريق
             const text = `${customer}: لقد حجزت مكاناً، الرجاء الاطلاع على الحجوزات.%0A- نوع الخدمة: ${platformLabel}%0A- الأجهزة المحجوزة بالضبط: ${sortedSeats}%0A- وقت الوصول المتوقع: ${arrival}%0A- المدة / الكمية: ${qtyText}%0A- المبلغ الإجمالي: ${totalStr}`;
             window.open(`https://wa.me/213${phone.substring(1)}?text=${text}`, '_blank');
         }
@@ -647,7 +676,7 @@
                     <td class="p-3 text-gray-300">${item.qty}</td>
                     <td class="p-3 font-bold text-green-400">${item.price}</td>
                     <td class="p-3 text-center">
-                        <button onclick="deleteBooking(${item.id})" class="bg-red-900/40 hover:bg-red-700 text-red-300 p-2 rounded-lg transition text-xs" title="حذف الحجز">
+                        <button onclick="deleteBooking('${item.docId}')" class="bg-red-900/40 hover:bg-red-700 text-red-300 p-2 rounded-lg transition text-xs" title="حذف الحجز">
                             <i class="fa-solid fa-trash-can"></i>
                         </button>
                     </td>
@@ -660,17 +689,21 @@
             document.getElementById('statActiveSeats').innerText = `${totalSeats} أجهزة`;
         }
 
-        function deleteBooking(id) {
-            if (confirm("هل انت متأكد من حذف هذا الحجز من الجدول؟")) {
-                bookingsList = bookingsList.filter(b => b.id !== id);
-                saveAndRenderBookings();
+        function deleteBooking(docId) {
+            if (confirm("هل أنت متأكد من حذف هذا الحجز من الجدول؟")) {
+                if (docId) {
+                    db.collection("bookings").doc(docId).delete().catch(err => console.error(err));
+                }
             }
         }
 
         function clearAllBookings() {
             if (confirm("هل تريد إفراغ جدول الحجوزات بالكامل لبداية يوم جديد؟")) {
-                bookingsList = [];
-                saveAndRenderBookings();
+                bookingsList.forEach(item => {
+                    if (item.docId) {
+                        db.collection("bookings").doc(item.docId).delete();
+                    }
+                });
             }
         }
 
@@ -683,12 +716,7 @@
             let inputPrice = document.getElementById('manualPrice').value.trim();
 
             let computedPrice = 0;
-
-            let seatsNum = 1;
-            if (seats.includes(',')) {
-                seatsNum = seats.split(',').length;
-            }
-
+            let seatsNum = seats.includes(',') ? seats.split(',').length : 1;
             let qtyNum = parseInt(qty.replace(/[^0-9]/g, '')) || 1;
 
             if (inputPrice !== '' && !isNaN(parseInt(inputPrice))) {
@@ -717,18 +745,12 @@
                 seatsCount: seatsNum
             };
 
-            bookingsList.push(newBooking);
-            saveAndRenderBookings();
+            db.collection("bookings").add(newBooking).catch(err => console.error(err));
 
             document.getElementById('manualName').value = '';
             document.getElementById('manualSeats').value = '';
             document.getElementById('manualQty').value = '';
             document.getElementById('manualPrice').value = '';
-        }
-
-        function saveAndRenderBookings() {
-            localStorage.setItem('am_game_bookings', JSON.stringify(bookingsList));
-            renderAdminTable();
         }
 
         // Initialize
