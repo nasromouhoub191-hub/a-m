@@ -87,7 +87,7 @@
                 <div class="text-brand-orange font-bold text-xs flex items-center justify-center gap-2">
                     <i class="fa-solid fa-mobile-screen-button text-lg"></i> هل تريد تثبيت التطبيق على هاتفك بنقرة واحدة؟
                 </div>
-                <button onclick="triggerInstall()" class="w-full bg-gradient-to-r from-brand-orange to-orange-600 text-black font-extrabold py-3 px-4 rounded-xl hover:opacity-90 transition shadow-lg text-sm flex items-center justify-center gap-2">
+                <button onclick="triggerInstall()" id="installBtn" class="w-full bg-gradient-to-r from-brand-orange to-orange-600 text-black font-extrabold py-3 px-4 rounded-xl hover:opacity-90 transition shadow-lg text-sm flex items-center justify-center gap-2">
                     <i class="fa-solid fa-download"></i> تثبيت التطبيق الآن بضغطة زر
                 </button>
             </div>
@@ -587,6 +587,43 @@
 
     <!-- Firebase SDK initialization & Logic -->
     <script>
+        // تسجيل Service Worker لضمان عمل PWA بشكل رسمي
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js').then(reg => {
+                    console.log('Service Worker Registered!', reg);
+                }).catch(err => {
+                    console.log('Service Worker Registration Failed!', err);
+                });
+            });
+        }
+
+        // إعداد متطور لزر تثبيت PWA لمنع التعليق[cite: 3]
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            const installBtn = document.getElementById('installBtn');
+            if (installBtn) {
+                installBtn.classList.remove('opacity-50');
+            }
+        });
+
+        function triggerInstall() {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                        console.log('المستخدم وافق على التثبيت');
+                    }
+                    deferredPrompt = null;
+                });
+            } else {
+                // إذا كان التطبيق مثبتاً مسبقاً أو أن المتصفح لا يدعم التثبيت المباشر[cite: 3]
+                alert('التطبيق مثبت بالفعل على جهازك أو يمكنك تثبيته يدوياً من قائمة المتصفح (خيارات المتصفح ➔ إضافة إلى الشاشة الرئيسية)');
+            }
+        }
+
         const firebaseConfig = {
             apiKey: "AIzaSyD-placeholder-am-game",
             authDomain: "am-game-collo.firebaseapp.com",
@@ -622,14 +659,6 @@
                 listenToMyBooking(savedBookingId);
             }
         });
-
-        function triggerInstall() {
-            if (window.deferredPrompt) {
-                window.deferredPrompt.prompt();
-            } else {
-                alert('التطبيق جاهز للتثبيت من إعدادات المتصفح.');
-            }
-        }
 
         function closeWelcomeModal() {
             document.getElementById('welcomeModal').classList.add('opacity-0', 'pointer-events-none');
@@ -673,7 +702,6 @@
             calculateTotal();
         }
 
-        // دالة مساعدة لتحويل الوقت (مثل "16:00") إلى دقائق منذ منتصف الليل للمقارنة الدقيقة
         function timeToMinutes(timeStr) {
             if (!timeStr) return 0;
             const parts = timeStr.split(':');
@@ -690,19 +718,18 @@
             
             const selectedDate = document.getElementById('bookingDate').value;
             const selectedTime = document.getElementById('arrivalTime').value;
-            let selectedDurationMins = 60; // افتراضي
+            let selectedDurationMins = 60;
             if (currentPlatform === 'pc') {
                 selectedDurationMins = parseInt(document.getElementById('timeSlider').value) || 60;
             } else if (currentPlatform === 'ps4-night') {
-                selectedDurationMins = 12 * 60; // ليلة كاملة
+                selectedDurationMins = 12 * 60;
             } else {
-                selectedDurationMins = (parseInt(document.getElementById('quantityInput').value) || 1) * 30; // افتراض 30 دقيقة للمباراة
+                selectedDurationMins = (parseInt(document.getElementById('quantityInput').value) || 1) * 30;
             }
 
             const newStartMins = timeToMinutes(selectedTime);
             const newEndMins = newStartMins + selectedDurationMins;
 
-            // التحقق من تداخل الفترات الزمنية للأجهزة المقبولة في نفس اليوم
             let occupiedAtThisTime = [];
             globalBookingsCache.forEach(b => {
                 if (b.status === 'accepted' && b.rawDate === selectedDate) {
@@ -710,7 +737,6 @@
                     let existingDurationMins = b.durationMins || 60;
                     let existingEndMins = existingStartMins + existingDurationMins;
 
-                    // معادلة فحص التداخل الزمني (Overlap Logic)
                     if (newStartMins < existingEndMins && newEndMins > existingStartMins) {
                         if (b.seats) {
                             b.seats.split(', ').forEach(s => {
@@ -1052,8 +1078,8 @@
         }
 
         function changeAdminPassword() {
-            let oldPin = document.getElementById('oldPinInput'].value;
-            let newPin = document.getElementById('newPinInput'].value;
+            let oldPin = document.getElementById('oldPinInput').value;
+            let newPin = document.getElementById('newPinInput').value;
 
             if (!oldPin || !newPin) {
                 alert('الرجاء إدخال كلمة المرور القديمة والجديدة.');
