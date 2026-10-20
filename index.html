@@ -301,7 +301,7 @@
             <p class="text-gray-400">اختر تاريخ ووقت الوصول والأجهزة المتاحة (باللون الأخضر) واحجز فوراً عبر واتساب</p>
         </div>
 
-        <!-- 🔔 صندوق إشعارات ومتابعة حالة حجز الزبون اللحظية -->
+        <!-- 🔔 صندوق إشعارات ومتابعة حالة حجز الزبون اللحظية (يظهر تلقائياً بعد الحجز) -->
         <div id="clientStatusCard" class="hidden mb-10 bg-brand-card p-6 rounded-3xl border-2 border-brand-orange shadow-[0_0_30px_rgba(255,102,0,0.2)] text-center transition-all duration-300 max-w-2xl mx-auto">
             <h3 class="text-lg font-black mb-3 text-brand-orange flex items-center justify-center gap-2">
                 <i class="fa-solid fa-bell text-xl"></i> صندوق إشعارات متابعة الحجز اللحظي
@@ -369,7 +369,7 @@
                     </div>
 
                     <div id="pcSliderContainer" class="bg-gray-900 p-4 rounded-xl border border-gray-800">
-                        <input type="range" id="timeSlider" min="15" max="300" step="15" value="60" oninput="renderSeats(); calculateTotal();" class="w-full h-2 bg-gray-800 rounded-lg appearance-none cursor-pointer">
+                        <input type="range" id="timeSlider" min="15" max="300" step="15" value="60" oninput="calculateTotal()" class="w-full h-2 bg-gray-800 rounded-lg appearance-none cursor-pointer">
                         <div class="flex justify-between text-xs text-gray-400 mt-2 font-bold">
                             <span>15 دقيقة</span>
                             <span>1 ساعة</span>
@@ -385,7 +385,7 @@
                 </div>
 
                 <div>
-                    <label class="block font-bold text-sm mb-2 text-gray-300">5. اختر الأجهزة (الأحمر مشغولة في نفس الفترة الزمنية / الأخضر متاح):</label>
+                    <label class="block font-bold text-sm mb-2 text-gray-300">5. اختر الأجهزة (الأحمر مشغولة في نفس التاريخ والوقت / الأخضر متاح):</label>
                     <div id="seatsGrid" class="grid grid-cols-5 gap-3 p-4 bg-gray-900 rounded-xl border border-gray-800"></div>
                 </div>
             </div>
@@ -611,6 +611,7 @@
         let selectedSeats = [];
         let globalBookingsCache = [];
 
+        // تعيين تاريخ اليوم افتراضياً والاستماع للحجز المخزن في المتصفح إن وجد
         window.addEventListener('DOMContentLoaded', () => {
             const today = new Date().toISOString().split('T')[0];
             const dateInput = document.getElementById('bookingDate');
@@ -673,13 +674,6 @@
             calculateTotal();
         }
 
-        // دالة مساعدة لتحويل الوقت (مثل "16:00") إلى دقائق منذ منتصف الليل للمقارنة الدقيقة
-        function timeToMinutes(timeStr) {
-            if (!timeStr) return 0;
-            const parts = timeStr.split(':');
-            return parseInt(parts[0]) * 60 + parseInt(parts[1]);
-        }
-
         function renderSeats() {
             const grid = document.getElementById('seatsGrid');
             if(!grid) return;
@@ -690,33 +684,14 @@
             
             const selectedDate = document.getElementById('bookingDate').value;
             const selectedTime = document.getElementById('arrivalTime').value;
-            let selectedDurationMins = 60; // افتراضي
-            if (currentPlatform === 'pc') {
-                selectedDurationMins = parseInt(document.getElementById('timeSlider').value) || 60;
-            } else if (currentPlatform === 'ps4-night') {
-                selectedDurationMins = 12 * 60; // ليلة كاملة
-            } else {
-                selectedDurationMins = (parseInt(document.getElementById('quantityInput').value) || 1) * 30; // افتراض 30 دقيقة للمباراة
-            }
 
-            const newStartMins = timeToMinutes(selectedTime);
-            const newEndMins = newStartMins + selectedDurationMins;
-
-            // التحقق من تداخل الفترات الزمنية للأجهزة المقبولة في نفس اليوم
             let occupiedAtThisTime = [];
             globalBookingsCache.forEach(b => {
-                if (b.status === 'accepted' && b.rawDate === selectedDate) {
-                    let existingStartMins = timeToMinutes(b.rawTime || '16:00');
-                    let existingDurationMins = b.durationMins || 60;
-                    let existingEndMins = existingStartMins + existingDurationMins;
-
-                    // معادلة فحص التداخل الزمني (Overlap Logic)
-                    if (newStartMins < existingEndMins && newEndMins > existingStartMins) {
-                        if (b.seats) {
-                            b.seats.split(', ').forEach(s => {
-                                if (!occupiedAtThisTime.includes(s)) occupiedAtThisTime.push(s);
-                            });
-                        }
+                if (b.status === 'accepted' && b.rawDate === selectedDate && b.rawTime === selectedTime) {
+                    if (b.seats) {
+                        b.seats.split(', ').forEach(s => {
+                            if (!occupiedAtThisTime.includes(s)) occupiedAtThisTime.push(s);
+                        });
                     }
                 }
             });
@@ -811,42 +786,25 @@
                 return;
             }
 
-            let durationMins = 60;
-            if (currentPlatform === 'pc') {
-                durationMins = parseInt(document.getElementById('timeSlider').value) || 60;
-            } else if (currentPlatform === 'ps4-night') {
-                durationMins = 720;
-            } else {
-                durationMins = (parseInt(document.getElementById('quantityInput').value) || 1) * 30;
-            }
-
-            const newStartMins = timeToMinutes(timeVal);
-            const newEndMins = newStartMins + durationMins;
-
             let conflictFound = false;
             globalBookingsCache.forEach(b => {
-                if (b.status === 'accepted' && b.rawDate === dateVal) {
-                    let existingStartMins = timeToMinutes(b.rawTime || '16:00');
-                    let existingDurationMins = b.durationMins || 60;
-                    let existingEndMins = existingStartMins + existingDurationMins;
-
-                    if (newStartMins < existingEndMins && newEndMins > existingStartMins) {
-                        seats.split(', ').forEach(s => {
-                            if (b.seats && b.seats.includes(s)) {
-                                conflictFound = true;
-                            }
-                        });
-                    }
+                if (b.status === 'accepted' && b.rawDate === dateVal && b.rawTime === timeVal) {
+                    seats.split(', ').forEach(s => {
+                        if (b.seats && b.seats.includes(s)) {
+                            conflictFound = true;
+                        }
+                    });
                 }
             });
 
             if (conflictFound) {
-                alert(`عذراً، الأجهزة المختارة (${seats}) مشغولة ومحجوزة مؤكدة في هذه الفترة الزمنية (${timeVal}) بتاريخ ${dateVal}! نرجو اختيار وقت آخر أو أجهزة أخرى.`);
+                alert(`عذراً، الأجهزة المختارة (${seats}) مشغولة ومحجوزة مؤكدة في تاريخ ${dateVal} على الساعة ${timeVal}! نرجو اختيار وقت آخر أو أجهزة أخرى.`);
                 return;
             }
 
             const msg = `السلام عليكم، أود تأكيد حجز في A@M Game:\n- الاسم: ${customerName}\n- الخدمة: ${platformName}\n- الأجهزة: ${seats}\n- التاريخ والوقت: ${dateVal} على ${timeVal}\n- المدة: ${qty}\n- الإجمالي: ${total}`;
             
+            // حفظ الحجز في السحابة وتفعيل متابعة الحالة في صندوق الإشعارات اللحظية فوراً
             if (db) {
                 db.collection("bookings").add({
                     customerName,
@@ -854,7 +812,6 @@
                     seats,
                     rawDate: dateVal,
                     rawTime: timeVal,
-                    durationMins: durationMins,
                     dateTime: `${dateVal} - ${timeVal}`,
                     duration: qty,
                     price: parseInt(total),
@@ -871,6 +828,7 @@
             window.open(`https://wa.me/213${phone.replace(/^0/, '')}?text=${encodeURIComponent(msg)}`, '_blank');
         }
 
+        // دالة الاستماع الفوري لحالة حجز الزبون وتحديث صندوق الإشعارات لحظياً
         function listenToMyBooking(bookingId) {
             const statusCard = document.getElementById('clientStatusCard');
             const msgContainer = document.getElementById('statusMessageContainer');
@@ -983,6 +941,7 @@
             });
         }
 
+        // دوال الإدارة للقبول والرفض
         function acceptBooking(id) {
             db.collection("bookings").doc(id).update({ status: 'accepted' }).then(() => {
                 alert('تم قبول وتأكيد الحجز بنجاح!');
@@ -1052,8 +1011,8 @@
         }
 
         function changeAdminPassword() {
-            let oldPin = document.getElementById('oldPinInput'].value;
-            let newPin = document.getElementById('newPinInput'].value;
+            let oldPin = document.getElementById('oldPinInput').value;
+            let newPin = document.getElementById('newPinInput').value;
 
             if (!oldPin || !newPin) {
                 alert('الرجاء إدخال كلمة المرور القديمة والجديدة.');
